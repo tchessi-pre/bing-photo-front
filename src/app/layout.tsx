@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/Sidebar/Sidebar';
+import NoSSR from '@/components/NoSSR';
 
 const robotoSans = localFont({
 	src: './fonts/RobotoFlex.ttf',
@@ -16,25 +17,28 @@ const robotoMono = localFont({
 
 export const metadata: Metadata = {
 	title: 'Bing Photo',
-	description: 'Bienvenue sur Bing Photo, votre application de gestion de photos en ligne ! Explorez et gérez vos albums, profitez d\'analyses visuelles intuitives, et retrouvez facilement vos photos préférées.'
+	description:
+		"Bienvenue sur Bing Photo, votre application de gestion de photos en ligne ! Explorez et gérez vos albums, profitez d'analyses visuelles intuitives, et retrouvez facilement vos photos préférées.",
 };
 
 export default function RootLayout({
 	children,
-}: Readonly<{
+}: {
 	children: React.ReactNode;
-}>) {
+}) {
 	return (
 		<html lang='en'>
 			<body
 				className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}
 			>
-				<div className='flex h-screen'>
-					{/* Sidebar persistante */}
-					<Sidebar />
-					{/* Contenu principal */}
-					<main className='flex-1 p-6'>{children}</main>
-				</div>
+				<NoSSR>
+					<div className='flex h-screen'>
+						{/* Sidebar persistante */}
+						<Sidebar />
+						{/* Contenu principal */}
+						<main className='flex-1 p-6'>{children}</main>
+					</div>
+				</NoSSR>
 			</body>
 		</html>
 	);
