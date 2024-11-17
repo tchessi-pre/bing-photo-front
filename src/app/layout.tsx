@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import Sidebar from '@/components/Sidebar';
 
 const robotoSans = localFont({
 	src: './fonts/RobotoFlex.ttf',
@@ -28,7 +29,12 @@ export default function RootLayout({
 			<body
 				className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}
 			>
-				{children}
+				<div className='flex h-screen'>
+					{/* Sidebar persistante */}
+					<Sidebar />
+					{/* Contenu principal */}
+					<main className='flex-1 p-6'>{children}</main>
+				</div>
 			</body>
 		</html>
 	);
