@@ -7,7 +7,7 @@ const ProfileSection: React.FC = () => {
 			<div className='text-center text-gray-500 text-sm font-semibold py-2'>
 				Profil
 			</div>
-			<Avatar className='transform transition-transform duration-200 ease-in-out hover:scale-110'>
+			<Avatar className='transform transition-transform duration-200 ease-in-out hover:scale-110 cursor-pointer'>
 				<AvatarImage
 					src='https://github.com/shadcn.png'
 					alt='Photo de profil'

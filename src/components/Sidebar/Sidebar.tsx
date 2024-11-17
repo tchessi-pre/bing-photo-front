@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import LogoIcon from '@/assets/icons/logo.svg';
 import NavItem from './NavItem';
 import ProfileSection from './ProfileSection';
@@ -11,9 +12,10 @@ const Sidebar: React.FC = () => {
 	return (
 		<div className='w-18 bg-gray-100 text-white p-2 space-y-1 flex flex-col justify-between'>
 			<div className='flex items-center justify-center py-4'>
-				<LogoIcon className='w-8 h-8' alt='Logo' />
+				<Link href='/' aria-label="Retour à l'accueil">
+					<LogoIcon className='w-8 h-8 cursor-pointer' />
+				</Link>
 			</div>
-
 			{/* Navigation */}
 			<nav className='flex flex-col space-y-1'>
 				<div className='text-center text-gray-500 text-sm font-semibold py-2'>
@@ -29,7 +31,6 @@ const Sidebar: React.FC = () => {
 				))}
 				<ProfileSection />
 			</nav>
-
 			{/* Bouton de déconnexion */}
 			<div className='flex items-center justify-center py-4'>
 				<LogoutButton />

@@ -7,11 +7,11 @@ import ShareIcon from '@/assets/icons/share.svg';
 import DeletePictureIcon from '@/assets/icons/trash-bin-minimalistic-svgrepo-com.svg';
 
 const navItems = [
-	{ href: '/', icon: OverviewIcon, label: 'Acceuil' },
-	{ href: '/favorites', icon: FavoriteIcon, label: 'Favoris' },
-	{ href: '/albums', icon: AlbumsIcon, label: 'Albums' },
-	{ href: '/archive', icon: ArchiveIcon, label: 'Archive' },
-	{ href: '/private', icon: PrivateHeartIcon, label: 'Privées' },
+	{ href: '/', icon: OverviewIcon, label: 'Afficher tout' },
+	{ href: '/favorites', icon: FavoriteIcon, label: 'Mes favoris' },
+	{ href: '/albums', icon: AlbumsIcon, label: 'Mes Albums' },
+	{ href: '/archive', icon: ArchiveIcon, label: 'Mon Archive' },
+	{ href: '/private', icon: PrivateHeartIcon, label: 'Photos Privées' },
 	{ href: '/share', icon: ShareIcon, label: 'Partager' },
 	{ href: '/trash', icon: DeletePictureIcon, label: 'Corbeille' },
 ];
