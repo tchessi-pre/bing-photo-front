@@ -1,13 +1,14 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import appTexts from '@/data/appTexts.json'; 
 
 type SearchInputProps = {
 	placeholder?: string;
 };
 
 const SearchInput: React.FC<SearchInputProps> = ({
-	placeholder = 'Rechercher...',
+	placeholder = appTexts.header.searchPlaceholder,
 }) => (
 	<div className='flex-grow mx-4 relative'>
 		<span className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 mr-2'>

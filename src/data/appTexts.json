@@ -1,0 +1,31 @@
+{
+	"welcomePage": {
+		"welcomeMessage": "Bienvenue dans votre espace photos !",
+		"appName": "Bing Photo",
+		"logoAction": "Cliquez sur le logo"
+	},
+	"header": {
+		"downloadTooltip": "Importer une photo",
+		"searchPlaceholder": "Rechercher...",
+		"logoAltText": "Retour à l'accueil"
+	},
+	"sidebar": {
+		"profileSection": "Profil",
+		"logoutButton": {
+			"tooltip": "Déconnexion",
+			"dialogTitle": "Confirmer la déconnexion",
+			"dialogDescription": "Êtes-vous sûr de vouloir vous déconnecter ? Cette action vous redirigera vers l'écran d'accueil.",
+			"cancelButton": "Annuler",
+			"confirmButton": "Déconnexion"
+		},
+		"navigation": {
+			"overview": "Afficher tout",
+			"favorites": "Mes favoris",
+			"albums": "Mes Albums",
+			"archive": "Mon Archive",
+			"private": "Photos Privées",
+			"share": "Partager",
+			"trash": "Corbeille"
+		}
+	}
+}

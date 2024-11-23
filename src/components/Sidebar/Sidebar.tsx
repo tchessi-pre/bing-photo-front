@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
 	return (
 		<div className='w-18 bg-gray-100 text-white p-2 space-y-1 flex flex-col justify-between'>
 			<div className='flex items-center justify-center py-4'>
-				<Link href='/' aria-label="Retour à l'accueil">
+				<Link href='/overview' aria-label="Retour à l'accueil">
 					<LogoIcon className='w-8 h-8 cursor-pointer' />
 				</Link>
 			</div>
