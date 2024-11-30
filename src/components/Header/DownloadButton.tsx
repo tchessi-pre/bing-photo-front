@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import DownloadIcon from '@/assets/icons/download.svg';
-import appTexts from '@/data/appTexts.json'; 
+import appTexts from '@/assets/appTexts.json'; 
 
 type DownloadButtonProps = {
 	onClick: () => void;

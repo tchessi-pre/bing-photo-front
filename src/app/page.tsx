@@ -1,14 +1,13 @@
 'use client';
 
+import WelcomePage from '@/components/welcome/WelcomePage';
 import React from 'react';
 
 const HomePage: React.FC = () => {
 
 	return (
 		<div>
-			<main className='p-4'>
-				<h1 className='text-2xl font-bold'>Bienvenue sur Bing Photo</h1>
-			</main>
+			<WelcomePage />
 		</div>
 	);
 };

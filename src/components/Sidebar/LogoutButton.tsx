@@ -11,7 +11,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import appTexts from '@/data/appTexts.json';
+import appTexts from '@/assets/appTexts.json';
 
 const LogoutButton: React.FC = () => {
 	const texts = appTexts.sidebar.logoutButton;

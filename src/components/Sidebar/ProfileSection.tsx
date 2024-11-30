@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import appTexts from '@/data/appTexts.json';
+import appTexts from '@/assets/appTexts.json';
 
 const ProfileSection: React.FC = () => {
 	const texts = appTexts.sidebar;

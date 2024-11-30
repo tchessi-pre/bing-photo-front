@@ -5,7 +5,7 @@ import ArchiveIcon from '@/assets/icons/archive.svg';
 import PrivateHeartIcon from '@/assets/icons/private-heart.svg';
 import ShareIcon from '@/assets/icons/share.svg';
 import DeletePictureIcon from '@/assets/icons/trash-bin-minimalistic-svgrepo-com.svg';
-import appTexts from '@/data/appTexts.json';
+import appTexts from '@/assets/appTexts.json';
 
 const navItems = [
 	{

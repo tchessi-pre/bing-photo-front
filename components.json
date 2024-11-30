@@ -18,8 +18,7 @@
     "hooks": "@/hooks",
     "store": "@/store",
     "api": "@/api",
-    "icons": "@/assets/icons",
-    "data": "@/data"
+    "icons": "@/assets/icons"
   },
   "iconLibrary": "lucide"
 }
