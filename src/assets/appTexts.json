@@ -4,6 +4,16 @@
 		"appName": "Bing Photo",
 		"logoAction": "Cliquez sur le logo"
 	},
+	"LoginPage": {
+		"email": "votre mail",
+		"Password": "votre mot de passe "
+	},
+	"InscriptionPage": {
+		"email": "votre mail",
+		"Password": "votre mot de passe ",
+		"nom": "votre nom",
+		"prenom": "votre prenom"
+	},
 	"header": {
 		"downloadTooltip": "Importer une photo",
 		"searchPlaceholder": "Rechercher...",
