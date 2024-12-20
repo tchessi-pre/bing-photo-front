@@ -18,7 +18,8 @@
     "hooks": "@/hooks",
     "store": "@/store",
     "api": "@/api",
-    "icons": "@/assets/icons"
+    "icons": "@/assets/icons",
+    "services": "@/services"
   },
   "iconLibrary": "lucide"
 }
