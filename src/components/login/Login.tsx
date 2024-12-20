@@ -1,8 +1,15 @@
-import React, { useState } from "react";
 
-import loginImage from "../../assets/images/image-login.png";
+'use client';
 import { Logo } from "@/components/Header";
 import appTexts from '@/assets/appTexts.json';
+import Link from "next/link"; // Importer Link
+
+
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; 
+import { signIn } from 'next-auth/react';
+
+
 
 
 
@@ -17,11 +24,18 @@ const Login: React.FC = () => {
   };
 
   const handleGoogleLogin = () => {
-    console.log("Connexion avec Google");
+    // Utilisation de next-auth pour se connecter via Google
+    signIn("google", {
+      callbackUrl: `${window.location.origin}/dashboard`, // Optionnel : redirige vers une page après la connexion réussie
+    });
   };
+  
 
-  const handleGithubLogin = () => {
-    console.log("Connexion avec GitHub");
+  const router = useRouter(); // Initialiser le router
+
+
+  const goToSignup = () => {
+    router.push('/signup'); // Rediriger vers la page Signup
   };
 
   return (
@@ -125,30 +139,16 @@ const Login: React.FC = () => {
               </svg>
               Google
             </button>
-            <button
-              onClick={handleGithubLogin}
-              className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                className="w-5 h-5 mr-2"
-                fill="currentColor"
-              >
-                <path
-                  d="M12 .296c-6.626 0-12 5.373-12 12 0 5.303 3.438 9.8 8.207 11.387.6.113.793-.26.793-.577 0-.285-.01-1.04-.016-2.04-3.338.724-4.042-1.615-4.042-1.615-.546-1.387-1.333-1.757-1.333-1.757-1.091-.746.083-.73.083-.73 1.205.085 1.84 1.236 1.84 1.236 1.07 1.835 2.809 1.305 3.495.997.108-.776.419-1.305.762-1.605-2.665-.303-5.466-1.332-5.466-5.931 0-1.31.469-2.382 1.236-3.22-.124-.303-.536-1.523.117-3.176 0 0 1.008-.322 3.3 1.23.957-.266 1.983-.399 3.003-.403 1.02.004 2.047.137 3.006.403 2.29-1.553 3.296-1.23 3.296-1.23.655 1.653.243 2.873.119 3.176.77.838 1.234 1.91 1.234 3.22 0 4.609-2.807 5.625-5.479 5.921.43.37.823 1.1.823 2.219 0 1.604-.014 2.896-.014 3.293 0 .32.192.694.799.576C20.565 22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12"
-                />
-              </svg>
-              GitHub
-            </button>
+           
           </div>
 
-          <p className="mt-4 text-sm text-center text-gray-600">
-            Pas de compte ?{" "}
-            <a href="/register" className="text-blue-500 hover:underline">
-              Inscrivez-vous
-            </a>
-          </p>
+                      <p className="mt-4 text-sm text-center text-gray-600">
+              Pas encore de compte ?{" "}
+              <Link href="/signup" className="text-blue-500 hover:underline">
+                Inscrivez-vous
+              </Link>
+            </p>
+          
         </div>
       </div>
     </div>

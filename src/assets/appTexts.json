@@ -8,9 +8,9 @@
 		"email": "votre mail",
 		"Password": "votre mot de passe "
 	},
-	"InscriptionPage": {
+	"SignupPage": {
 		"email": "votre mail",
-		"Password": "votre mot de passe ",
+		"password": "votre mot de passe ",
 		"nom": "votre nom",
 		"prenom": "votre prenom"
 	},
