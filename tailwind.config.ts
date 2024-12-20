@@ -20,10 +20,7 @@ export default {
 					DEFAULT: 'hsl(var(--popover))',
 					foreground: 'hsl(var(--popover-foreground))',
 				},
-				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))',
-				},
+				primary: '#4353FF',
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))',
@@ -59,7 +56,18 @@ export default {
 		},
 		animation: {
 			'spin-slow': 'spin 20s linear infinite',
+			'fade-in': 'fadeIn 0.2s ease-out forwards',
+		},
+		keyframes: {
+			fadeIn: {
+				'0%': { opacity: '0', transform: 'translateY(50px)' },
+				'100%': { opacity: '1', transform: 'translateY(0)' },
+			},
 		},
 	},
+	safelist: [
+		{ pattern: /col-span-(1|2)/ }, // Génère col-span-1 et col-span-2
+		{ pattern: /row-span-(1|2)/ }, // Génère row-span-1 et row-span-2
+	],
 	plugins: [require('tailwindcss-animate')],
 } satisfies Config;

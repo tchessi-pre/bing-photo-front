@@ -27,5 +27,22 @@
 			"share": "Partager",
 			"trash": "Corbeille"
 		}
+	},
+	"AlbumDetailPage": {
+		"albumNotFound": "Album introuvable.",
+		"emptyAlbumTitle": "Les photos s'affichent ici",
+		"emptyAlbumMessage": "Ajoutez des photos pour remplir cet album.",
+		"addImagesAction": "Ajouter des images"
+	},
+	"albumPage": {
+		"pageTitle": "Mes Albums",
+		"emptyPageTitle": "Les albums créés s'affichent ici!",
+		"emptyPageMessage": "Créez votre premier album pour commencer à organiser vos photos.",
+		"emptyPageActionLabel": "Créer un album",
+		"importAction": "Importer des images",
+		"createAlbumAction": "Créer un nouvel album"
+	},
+	"overviewPage": {
+		"title": "Albums"
 	}
 }

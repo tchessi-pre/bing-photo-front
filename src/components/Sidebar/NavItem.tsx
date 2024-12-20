@@ -26,7 +26,7 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon: Icon, label }) => {
 				}`}
 			/>
 			<span
-				className='absolute left-12 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm font-semibold rounded-lg px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg whitespace-nowrap'
+				className='absolute z-50 left-12 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm font-semibold rounded-lg px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg whitespace-nowrap'
 				style={{
 					clipPath: 'polygon(10% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%)',
 					marginLeft: '10px',

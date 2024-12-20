@@ -1,14 +1,16 @@
 "use client";
-
-import Header from '@/components/Header/Header';
+import AlbumImageCard from '@/components/Album/AlbumImageCard';
 import React from 'react';
 
-const AlbumsPage: React.FC = () => {
+const AllAlbumsPage: React.FC = () => {
+
 	return (
-		<div className='p-2'>
-			<h1 className='text-xl font-bold mb-4'>Mes Albums</h1>
+		<div className="p-2">	
+			<div className="">
+			<AlbumImageCard />
+			</div>
 		</div>
 	);
 };
 
-export default AlbumsPage;
+export default AllAlbumsPage;

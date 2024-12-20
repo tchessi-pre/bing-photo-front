@@ -35,7 +35,7 @@ const nextConfig = {
 						},
 					},
 				},
-			},
+			}
 		);
 
 		// Modify the file loader rule to ignore *.svg, since we have it handled now.
@@ -43,6 +43,9 @@ const nextConfig = {
 
 		return config;
 	},
+	images: {
+		domains: [], 
+	}
 };
 
 export default nextConfig;
