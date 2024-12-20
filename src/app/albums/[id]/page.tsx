@@ -9,31 +9,53 @@ import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import {
   getAlbumById,
-  addImageToAlbum,
   toggleImageSelection,
 } from '@/services/album/albumDetailService';
 
 const AlbumDetailPage: React.FC = () => {
   const texts = appTexts.AlbumDetailPage;
   const params = useParams();
-  const albumId = params?.id as string;
+  const albumId = parseInt(params?.id as string, 10);
 
   const album = getAlbumById(albumId);
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
+  const [images, setImages] = useState(album ? album.images : []);
 
   const handleImageSelect = (index: number) => {
     const updatedSelection = toggleImageSelection(selectedImages, index);
     setSelectedImages(updatedSelection);
   };
 
-  const handleAddImage = () => {
-    const newImage = { src: '/images/newImage.jpg', alt: 'Nouvelle image' };
-    const success = addImageToAlbum(albumId, newImage);
-    if (success) {
-      console.log('Image ajoutée avec succès !');
-    } else {
-      console.log("Échec de l'ajout de l'image !");
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const newImage = { src: reader.result as string, alt: file.name };
+          setImages((prevImages) => [...prevImages, newImage]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
+  };
+
+  const handleDeleteSelectedImages = () => {
+    setImages((prevImages) =>
+      prevImages.filter((_, index) => !selectedImages.has(index))
+    );
+    setSelectedImages(new Set());
+  };
+
+  const handleSelectSimilarImages = () => {
+    // Exemple logique : sélectionnez les images avec des "alt" similaires
+    const newSelection = new Set<number>();
+    images.forEach((image, index) => {
+      if (image.alt.includes('similar')) {
+        newSelection.add(index);
+      }
+    });
+    setSelectedImages(newSelection);
   };
 
   if (!album) {
@@ -44,23 +66,26 @@ const AlbumDetailPage: React.FC = () => {
     <div className="p-4">
       <PageHeader
         title={album.title}
-        onImport={() => console.log('Importer des images !')}
-        onCreateAlbum={() => console.log('Créer un nouvel album !')}
-        imageCount={album.images.length}
+        onFileChange={handleFileChange}
+        onCreateAlbum={(albumName) => console.log(`Créer l'album : ${albumName}`)}
+        onDeleteSelectedImages={handleDeleteSelectedImages}
+        onSelectSimilarImages={handleSelectSimilarImages} // Ajouté ici
+        imageCount={images.length}
         selectedImageCount={selectedImages.size}
       />
+
       <div className="mt-4 ml-10 mr-10">
-        {album.images.length === 0 ? (
+        {images.length === 0 ? (
           <EmptyPage
             title={texts.emptyAlbumTitle}
             message={texts.emptyAlbumMessage}
             imageSrc={<AlbumAnimateSVG />}
             actionLabel={texts.addImagesAction}
-            onAction={handleAddImage}
+            onFileChange={handleFileChange}
           />
         ) : (
           <ImageGrid
-            images={album.images}
+            images={images}
             selectedImages={selectedImages}
             onImageSelect={handleImageSelect}
           />

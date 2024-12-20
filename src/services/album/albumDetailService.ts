@@ -4,7 +4,7 @@ export interface Image {
 }
 
 export interface Album {
-  id: string;
+  id: number;
   title: string;
   images: Image[];
 }
@@ -12,7 +12,7 @@ export interface Album {
 // Données fictives pour les albums
 const albums: Album[] = [
   {
-    id: '1',
+    id: 1,
     title: 'Vacances à la plage',
     images: [
       { src: '/images/album1.jpg', alt: 'Image 1' },
@@ -27,7 +27,7 @@ const albums: Album[] = [
     ],
   },
   {
-    id: '2',
+    id: 2,
     title: 'Au Makéda',
     images: [
       { src: '/images/album1.jpg', alt: 'Image 1' },
@@ -38,19 +38,19 @@ const albums: Album[] = [
     ],
   },
   {
-    id: '3',
+    id: 3,
     title: 'Anniversaire',
     images: [],
   },
 ];
 
 // Fonction pour récupérer un album par ID
-export const getAlbumById = (id: string): Album | undefined => {
+export const getAlbumById = (id: number): Album | undefined => {
   return albums.find((album) => album.id === id);
 };
 
 // Fonction pour ajouter une image à un album
-export const addImageToAlbum = (id: string, image: Image): boolean => {
+export const addImageToAlbum = (id: number, image: Image): boolean => {
   const album = getAlbumById(id);
   if (!album) {
     return false;
