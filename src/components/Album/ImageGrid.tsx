@@ -4,12 +4,13 @@ import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { CircleCheckBig, ZoomIn } from 'lucide-react';
 import { getRandomGridSpan } from '@/lib/gridUtils';
-import ImageModal from '@/components/Album/ImageModal';
+import ImageModal from '@/components/customs/ImageModal';
 
 type ImageGridProps = {
   images: { src: string; alt: string; label?: string }[];
   selectedImages: Set<number>;
   onImageSelect: (index: number) => void;
+  onDelete: (index: number) => void;
 };
 
 const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSelect }) => {
@@ -21,6 +22,18 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
   const handleCloseModal = () => {
     setZoomedImageIndex(null);
   };
+
+  function handleDelete(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function handleAddToAlbum(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function handleSelect(index: number): void {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <div className="bg-white dark:bg-gray-800 min-h-screen py-6 sm:py-8 lg:py-12">
@@ -43,8 +56,14 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
           return (
             <motion.div
               key={index}
-              className={`relative overflow-hidden rounded-lg shadow-lg cursor-pointer group ${gridSpan} ${isSelected ? 'border-4 border-green-500' : ''
-                }`}
+              className={`relative overflow-hidden rounded-lg shadow-lg cursor-pointer group ${gridSpan}`}
+              initial={{ borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }}
+              animate={
+                isSelected
+                  ? { borderWidth: 4, borderColor: '#22c55e', borderRadius: '12px' }
+                  : { borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }
+              }
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
                 visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
@@ -58,25 +77,31 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
                 whileHover={{ scale: 1.05 }}
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
-              <div
+              <motion.div
                 className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-1 transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
                   }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   onImageSelect(index);
                 }}
+                whileHover={{
+                  scale: 1.1,
+                }}
               >
                 <CircleCheckBig className="w-6 h-6" />
-              </div>
-              <div
+              </motion.div>
+              <motion.div
                 className="absolute bottom-2 right-2 text-white bg-gray-700/50 p-1 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                 onClick={(e) => {
                   e.stopPropagation();
                   setZoomedImageIndex(index);
                 }}
+                whileHover={{
+                  scale: 1.1,
+                }}
               >
                 <ZoomIn className="w-6 h-6" />
-              </div>
+              </motion.div>
             </motion.div>
           );
         })}
@@ -88,6 +113,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
           images={images}
           initialIndex={zoomedImageIndex}
           onClose={handleCloseModal}
+          onDelete={handleDelete}
+          onAddToAlbum={handleAddToAlbum}
+          onSelect={handleSelect}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-export { default as ImageModal } from './ImageModal';
+export { default as ImageModal } from '../customs/ImageModal';
 export { default as ImageGrid } from './ImageGrid';
 export { default as AlbumImageCard } from './AlbumImageCard';
 export { default as AlbumCreateDialog } from './AlbumCreateDialog';

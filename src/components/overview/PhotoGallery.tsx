@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { CircleCheckBig, ZoomIn } from 'lucide-react';
 import { groupPhotosByDate, Photo } from '@/services/album/photoService';
 import Header from '@/components/Header/Header';
-import ImageModal from '@/components/Album/ImageModal';
+import ImageModal from '@/components/customs/ImageModal';
 
 type PhotoGalleryProps = {
   photos: Photo[];
@@ -46,6 +46,13 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
     console.log('Images partagées:', Array.from(selectedImages));
   };
 
+  function handleAddToAlbum(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function handleSelect(index: number): void {
+    throw new Error('Function not implemented.');
+  }
   return (
     <div className="w-full">
       {/* Header */}
@@ -80,8 +87,14 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                 return (
                   <motion.div
                     key={photo.id}
-                    className={`relative overflow-hidden shadow-lg group w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)] ${isSelected ? 'border-4 border-green-500' : ''
-                      }`}
+                    className={`relative overflow-hidden shadow-lg group w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)]`}
+                    initial={{ borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }}
+                    animate={
+                      isSelected
+                        ? { borderWidth: 4, borderColor: '#22c55e', borderRadius: '12px' }
+                        : { borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }
+                    }
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
                     {/* Image avec Effet au Survol */}
                     <motion.img
@@ -95,7 +108,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
 
                     {/* Check Icon */}
                     <motion.div
-                      className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-2 transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-2 transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 cursor-pointer'
                         }`}
                       whileHover={{
                         scale: 1.1,
@@ -110,7 +123,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
 
                     {/* ZoomIn Icon */}
                     <motion.div
-                      className="absolute bottom-2 right-2 text-white bg-gray-700/50 p-2 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+                      className="absolute bottom-2 right-2 text-white bg-gray-700/50 p-2 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100 cursor-pointer"
                       whileHover={{
                         scale: 1.1,
                       }}
@@ -137,6 +150,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
             }))}
             initialIndex={zoomedImageIndex}
             onClose={handleCloseModal}
+            onDelete={handleDelete}
+            onAddToAlbum={handleAddToAlbum}
+            onSelect={handleSelect}
           />
         )}
       </div>
