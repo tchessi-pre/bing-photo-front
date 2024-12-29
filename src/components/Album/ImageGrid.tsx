@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { CircleCheckBig, ZoomIn } from 'lucide-react';
 import { getRandomGridSpan } from '@/lib/gridUtils';
 import ImageModal from '@/components/Album/ImageModal';
@@ -23,10 +24,16 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
 
   return (
     <div className="bg-white dark:bg-gray-800 min-h-screen py-6 sm:py-8 lg:py-12">
-      <div
+      <motion.div
         className="grid grid-cols-4 gap-4 auto-rows-[150px] md:auto-rows-[200px] w-full"
         style={{
           gridAutoFlow: 'dense',
+        }}
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
         }}
       >
         {images.map((image, index) => {
@@ -34,16 +41,21 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
           const gridSpan = gridSpansRef.current[index];
 
           return (
-            <div
+            <motion.div
               key={index}
               className={`relative overflow-hidden rounded-lg shadow-lg cursor-pointer group ${gridSpan} ${isSelected ? 'border-4 border-green-500' : ''
                 }`}
+              variants={{
+                hidden: { opacity: 0, scale: 0.9 },
+                visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
+              }}
             >
-              <img
+              <motion.img
                 src={image.src}
                 alt={image.alt}
-                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${isSelected ? 'filter grayscale opacity-50' : ''
+                className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 ${isSelected ? 'filter grayscale opacity-50' : ''
                   }`}
+                whileHover={{ scale: 1.05 }}
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50"></div>
               <div
@@ -65,10 +77,10 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
               >
                 <ZoomIn className="w-6 h-6" />
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Modal avec carrousel */}
       {zoomedImageIndex !== null && (

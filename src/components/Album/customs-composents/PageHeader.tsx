@@ -6,16 +6,17 @@ import { CloudDownload } from 'lucide-react';
 import AlbumCreateDialog from '@/components/Album/AlbumCreateDialog';
 import DeleteIcon from '@/assets/icons/trash.svg';
 import KillerFeatureIcon from '@/assets/icons/magic-stick-3-svgrepo-com.svg';
-import ConfirmationDialog from '@/components/customs/ConfirmationDialog';
-import TooltipCustom from '@/components/customs/TooltipCustom';
 import { usePathname } from 'next/navigation';
+import { ConfirmationDialog, TooltipCustom } from '@/components/customs';
 
 type PageHeaderProps = {
   title: string;
+  onImport: () => void,
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onCreateAlbum: (albumName: string) => void;
   onDeleteSelectedImages: () => void;
   onSelectSimilarImages: () => void;
+  onAction: () => void;
   albumCount?: number;
   imageCount?: number;
   selectedImageCount?: number;
@@ -23,10 +24,12 @@ type PageHeaderProps = {
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   title,
+  onImport,
   onFileChange,
   onCreateAlbum,
   onDeleteSelectedImages,
   onSelectSimilarImages,
+  onAction,
   albumCount,
   imageCount,
   selectedImageCount,
@@ -43,7 +46,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     setIsDialogOpen(false);
   };
 
-  const isAlbumDetailPage = pathname?.startsWith('/albums/'); // Vérifie si on est sur une page album détail
+  const isAlbumDetailPage = pathname?.startsWith('/albums/');
 
   return (
     <div className="z-50 flex w-[85vw] items-center justify-between p-4 bg-gray-100 rounded-lg shadow-md ml-12 border border-gray-200 mt-14">
@@ -108,10 +111,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           className="hidden"
           onChange={onFileChange}
         />
-
         <AlbumCreateDialog onCreateAlbum={onCreateAlbum} />
       </div>
-
       {/* Dialogue de confirmation pour la suppression */}
       <ConfirmationDialog
         isOpen={isDialogOpen}

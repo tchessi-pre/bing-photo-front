@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import { getAlbums, addAlbum, deleteAlbum } from '@/services/album/albumService';
-import PageHeader from './customs-composents/PageHeader';
-import AlbumCard from './customs-composents/AlbumCard';
-import EmptyPage from '../customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
+import { EmptyPage } from '../customs';
+import PageHeader from './customs-composents/PageHeader';
+import AlbumCard from './customs-composents/AlbumCard';
 
 const AlbumImageCard: React.FC = () => {
   const texts = appTexts.albumPage;
@@ -41,10 +41,13 @@ const AlbumImageCard: React.FC = () => {
       <PageHeader
         title={texts.pageTitle}
         onImport={handleImport}
+        onFileChange={(e) => console.log('Fichiers sélectionnés', e.target.files)}
         onCreateAlbum={handleCreateAlbum}
+        onDeleteSelectedImages={() => console.log('Suppression des images sélectionnées')}
+        onSelectSimilarImages={() => console.log('Sélection d’images similaires')}
+        onAction={() => console.log('Action réalisée')}
         albumCount={albums.length}
       />
-
       <div className="flex flex-wrap justify-center gap-4 mt-4">
         {albums.length === 0 ? (
           <EmptyPage

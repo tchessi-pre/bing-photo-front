@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import ImageGrid from '@/components/Album/ImageGrid';
-import PageHeader from '@/components/Album/customs-composents/PageHeader';
-import EmptyPage from '@/components/customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import {
   getAlbumById,
   toggleImageSelection,
 } from '@/services/album/albumDetailService';
+import { PageHeader } from '@/components/Album';
+import { EmptyPage } from '@/components/customs';
 
 const AlbumDetailPage: React.FC = () => {
   const texts = appTexts.AlbumDetailPage;
@@ -62,6 +62,14 @@ const AlbumDetailPage: React.FC = () => {
     return <div className="p-4">{texts.albumNotFound}</div>;
   }
 
+  function handleCreateAlbum(): void {
+    throw new Error('Function not implemented.');
+  }
+
+  function handleImport(): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <div className="p-4">
       <PageHeader
@@ -69,9 +77,11 @@ const AlbumDetailPage: React.FC = () => {
         onFileChange={handleFileChange}
         onCreateAlbum={(albumName) => console.log(`Créer l'album : ${albumName}`)}
         onDeleteSelectedImages={handleDeleteSelectedImages}
-        onSelectSimilarImages={handleSelectSimilarImages} // Ajouté ici
+        onSelectSimilarImages={handleSelectSimilarImages}
         imageCount={images.length}
         selectedImageCount={selectedImages.size}
+        onAction={handleCreateAlbum}
+        onImport={handleImport}
       />
 
       <div className="mt-4 ml-10 mr-10">
