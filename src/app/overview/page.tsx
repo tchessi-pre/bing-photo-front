@@ -7,12 +7,11 @@ import appTexts from '@/assets/appTexts.json';
 import { AlbumCarousel } from '@/components/overview';
 import PhotoGallery from '@/components/overview/PhotoGallery';
 
-
 const OverviewPage: React.FC = () => {
-	const [albums, setAlbums] = useState(getAlbums());
+	const [albums] = useState(getAlbums()); // Charger les albums depuis le service
 	const router = useRouter();
 	const texts = appTexts.overviewPage;
-	
+
 	// Fonction pour obtenir une image aléatoire
 	const getRandomImage = (images: { src: string; alt: string }[]) => {
 		const randomIndex = Math.floor(Math.random() * images.length);
@@ -21,20 +20,21 @@ const OverviewPage: React.FC = () => {
 
 	// Construire une liste d'images pour le carrousel
 	const carouselImages = albums.map((album) => {
-		const randomImage = getRandomImage(album.images); 
+		const randomImage = getRandomImage(album.images); // Obtenir une image aléatoire de l'album
 		return {
 			src: randomImage.src,
 			alt: `${album.title} - ${randomImage.alt}`,
 			id: album.id,
-			albumTitle: album.title, 
+			albumTitle: album.title, // Ajouter le titre de l'album
 		};
 	});
 
+	// Naviguer vers l'album spécifique au clic
 	const handleImageClick = (albumId: number) => {
-		router.push(`/albums/${albumId}`); 
+		router.push(`/albums/${albumId}`); // Rediriger vers la page de l'album
 	};
 
-
+	// Photos à afficher dans la galerie
 	const photos = [
 		{ id: 1, src: '/images/album1.jpg', date: '2023-12-21', alt: 'Photo 1' },
 		{ id: 2, src: '/images/album2.jpg', date: '2023-12-21', alt: 'Photo 1' },
@@ -51,12 +51,11 @@ const OverviewPage: React.FC = () => {
 	return (
 		<div className="p-2">
 			<div className="container mx-auto flex justify-center">
-			<AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} />
+				<AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} />
 			</div>
-			<div className="container mx-auto">
+			<div className="container mx-auto mt-6">
 				<PhotoGallery photos={photos} />
 			</div>
-
 		</div>
 	);
 };

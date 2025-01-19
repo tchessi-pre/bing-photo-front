@@ -40,8 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<Header
 								onDownload={() => console.log('Télécharger')}
 								placeholder="Rechercher..."
-								selectedImages={Array.from(selectedImages)} // Convertir le Set en tableau
-								onClose={() => setSelectedImages(new Set())} // Réinitialiser la sélection
+								selectedImages={Array.from(selectedImages)}
+								onClose={() => setSelectedImages(new Set())}
 								onFavorite={() => console.log('Ajouter aux favoris')}
 								onDelete={() => console.log('Supprimer')}
 								onShare={() => console.log('Partager')}

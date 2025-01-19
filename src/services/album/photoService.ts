@@ -2,8 +2,8 @@
 export type Photo = {
   id: number;
   src: string;
-  date: string; // Format : "YYYY-MM-DD"
-  alt?: string; // Optionnel
+  date: string;
+  alt?: string;
 };
 
 export type GroupedPhotos = {

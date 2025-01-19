@@ -49,7 +49,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   const isAlbumDetailPage = pathname?.startsWith('/albums/');
 
   return (
-    <div className="z-50 flex w-[85vw] items-center justify-between p-4 bg-gray-100 rounded-lg shadow-md ml-12 border border-gray-200 mt-14">
+    <div className="sticky top-14 z-50 flex w-[85vw] items-center justify-between p-4 bg-gray-100 rounded-lg shadow-md ml-10 border border-gray-200 mt-14">
       <div className="flex items-center gap-4">
         <h1 className="text-xl font-bold text-gray-800">{title}</h1>
         {albumCount !== undefined && (

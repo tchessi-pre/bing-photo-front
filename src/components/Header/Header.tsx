@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
 				<>
 					{!isMobile && (
 						<div className="flex items-center">
-							<LogoIcon />
+							<LogoIcon  />
 							<Logo />
 						</div>
 					)}

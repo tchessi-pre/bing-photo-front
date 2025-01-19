@@ -36,7 +36,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images, selectedImages, onImageSe
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 min-h-screen py-6 sm:py-8 lg:py-12">
+    <div className="bg-white ml-8 dark:bg-gray-800 min-h-screen py-6 sm:py-8 lg:py-12">
       <motion.div
         className="grid grid-cols-4 gap-4 auto-rows-[150px] md:auto-rows-[200px] w-full"
         style={{

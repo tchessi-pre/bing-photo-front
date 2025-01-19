@@ -20,6 +20,7 @@ type ImageModalProps = {
   onSelect: (index: number) => void;
 };
 
+
 const ImageModal: React.FC<ImageModalProps> = ({
   images,
   initialIndex,
@@ -46,6 +47,10 @@ const ImageModal: React.FC<ImageModalProps> = ({
     exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2, ease: 'easeIn' } },
   };
 
+  function handleOnShare(index: number): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <AnimatePresence>
       <motion.div
@@ -64,6 +69,7 @@ const ImageModal: React.FC<ImageModalProps> = ({
           onDelete={onDelete}
           onSelect={onSelect}
           onClose={onClose}
+          onShare={handleOnShare}
         />
 
         {/* Carousel */}

@@ -12,7 +12,7 @@ const SidebarDesktop: React.FC = () => {
 			{/* Logo */}
 			<div className='flex items-center justify-center py-4'>
 				<Link href='/overview' aria-label="Retour à l'accueil">
-					<LogoIcon className='w-8 h-8 cursor-pointer' />
+					<LogoIcon className='w-8 h-8 cursor-pointer transform hover:rotate-45 transition-transform duration-300' />
 				</Link>
 			</div>
 

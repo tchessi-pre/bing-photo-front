@@ -5,7 +5,7 @@ import { getAlbums, addAlbum, deleteAlbum } from '@/services/album/albumService'
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import { EmptyPage } from '../customs';
-import PageHeader from './customs-composents/PageHeader';
+import PageHeader from '../customs/PageHeader';
 import AlbumCard from './customs-composents/AlbumCard';
 
 const AlbumImageCard: React.FC = () => {

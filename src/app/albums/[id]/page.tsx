@@ -97,8 +97,9 @@ const AlbumDetailPage: React.FC = () => {
           <ImageGrid
             images={images}
             selectedImages={selectedImages}
-            onImageSelect={handleImageSelect}
-          />
+            onImageSelect={handleImageSelect} onDelete={function (index: number): void {
+              throw new Error('Function not implemented.');
+            }} />
         )}
       </div>
     </div>
