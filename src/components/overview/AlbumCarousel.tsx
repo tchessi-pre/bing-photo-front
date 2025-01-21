@@ -33,12 +33,12 @@ const AlbumCarousel: React.FC<AlbumCarouselProps> = ({ title, images, onImageCli
 
   return (
     <motion.div
-      className="w-full mt-14 ml-4 mr-4"
+      className="w-full mt-20 ml-4 mr-4 flex flex-col items-center"
       initial="hidden"
       animate={isMounted ? 'visible' : 'hidden'}
       variants={containerVariants}
     >
-      <h2 className="text-2xl font-bold mb-4 text-start">{title}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-left w-full">{title}</h2>
       <Carousel>
         <CarouselContent className="gap-4 sm:gap-6 md:gap-1">
           {images.map((image) => (
@@ -68,8 +68,8 @@ const AlbumCarousel: React.FC<AlbumCarouselProps> = ({ title, images, onImageCli
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="h-full w-56 -left-10 border-none rounded-none [mask-image:linear-gradient(to_right,transparent,white_10%,white_30%,transparent)] hover:opacity-80 transition-opacity duration-300" />
-        <CarouselNext className="h-full w-56 -right-10 rounded-none border-none [mask-image:linear-gradient(to_left,transparent,white_10%,white_30%,transparent)] hover:opacity-80 transition-opacity duration-300" />
+        <CarouselPrevious className="h-full w-56 -left-10 border-none rounded-none [mask-image:linear-gradient(to_right,transparent,white_10%,white_40%,transparent)] hover:opacity-90 transition-opacity duration-300" />
+        <CarouselNext className="h-full w-56 -right-10 rounded-none border-none [mask-image:linear-gradient(to_left,transparent,white_10%,white_40%,transparent)] hover:opacity-90 transition-opacity duration-300" />
       </Carousel>
     </motion.div>
   );

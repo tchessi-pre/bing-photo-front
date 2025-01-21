@@ -49,11 +49,11 @@ const OverviewPage: React.FC = () => {
 	];
 
 	return (
-		<div className="p-2">
-			<div className="container mx-auto flex justify-center">
+		<div className="p-2 ml-10 mr-10">
+			<div>
 				<AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} />
 			</div>
-			<div className="container mx-auto mt-6">
+			<div>
 				<PhotoGallery photos={photos} />
 			</div>
 		</div>
