@@ -1,18 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion'; // Import de Framer Motion
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Logo from './Logo';
 import DownloadButton from './DownloadButton';
 import SearchInput from './SearchInput';
 import { useMobile } from '@/hooks/useMobile';
 import DropdownMenu from '../Sidebar/DropdownMenu';
-import CloseIcon from '@/assets/icons/close-square-svgrepo-com.svg';
-import AddToFavoriteIcon from '@/assets/icons/gallery-favourite-svgrepo-com.svg';
-import DeleteIcon from '@/assets/icons/trash.svg';
-import ShareIcon from '@/assets/icons/share.svg';
 import LogoIcon from '@/assets/icons/logo.svg';
 import SelectedHeaderActions from './SelectedHeaderActions';
+import PinModal from '../private/PinModal';
 
 type HeaderProps = {
 	onDownload: () => void;
@@ -34,44 +31,56 @@ const Header: React.FC<HeaderProps> = ({
 	onShare,
 }) => {
 	const isMobile = useMobile();
-	const hasSelectedImages = selectedImages.length > 0; // Vérifie si des images sont sélectionnées
+	const hasSelectedImages = selectedImages.length > 0;
+	const [isPinModalOpen, setIsPinModalOpen] = useState(false);
+	const router = useRouter();
 
-	// État local pour contrôler la visibilité des icônes
-	const [isVisible, setIsVisible] = useState(true);
+	// Vérifiez si un code PIN existe déjà
+	const hasPin = localStorage.getItem('privatePin') !== null;
 
 	// Gestion de la fermeture
 	const handleClose = () => {
-		setIsVisible(false);
-		setTimeout(() => {
-			onClose && onClose();
-			setIsVisible(true);
-		}, 500);
+		onClose && onClose();
+	};
+
+	// Gestion de la soumission du code PIN
+	const handlePinSubmit = (pin: string) => {
+		console.log('Code PIN créé :', pin);
+		localStorage.setItem('privatePin', pin);
+		router.push('/private');
+	};
+
+	// Si l'utilisateur clique sur "Privé" et qu'un code PIN existe déjà, redirigez-le
+	const handlePrivateClick = () => {
+		if (hasPin) {
+			router.push('/private');
+		} else {
+			setIsPinModalOpen(true);
+		}
 	};
 
 	return (
 		<header className="fixed z-50 top-0 left-0 w-full flex items-center justify-between bg-white text-gray-800 px-4 py-4 shadow">
 			{hasSelectedImages ? (
 				<SelectedHeaderActions
-					isVisible={isVisible}
+					isVisible={true}
 					selectedImagesCount={selectedImages.length}
 					onClose={handleClose}
 					onFavorite={onFavorite}
-					onDelete={onDelete}
 					onShare={onShare}
+					onPrivate={handlePrivateClick}
 				/>
 			) : (
 				// Header par défaut
 				<>
 					{!isMobile && (
 						<div className="flex items-center">
-							<LogoIcon  />
+							<LogoIcon />
 							<Logo />
 						</div>
 					)}
 
-					<div
-						className={`flex items-center ${isMobile ? 'w-full justify-between' : ''}`}
-					>
+					<div className={`flex items-center ${isMobile ? 'w-full justify-between' : ''}`}>
 						<DownloadButton onClick={onDownload} />
 						<SearchInput
 							placeholder={placeholder}
@@ -91,6 +100,13 @@ const Header: React.FC<HeaderProps> = ({
 					)}
 				</>
 			)}
+
+			{/* Modale pour créer un code PIN */}
+			<PinModal
+				isOpen={isPinModalOpen}
+				onClose={() => setIsPinModalOpen(false)}
+				onSubmit={handlePinSubmit}
+			/>
 		</header>
 	);
 };

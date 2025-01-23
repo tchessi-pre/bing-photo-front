@@ -5,7 +5,7 @@ type Photo = {
   date: string;
 };
 
-export const favoritePhotos: Photo[] = [
+export const privatePhotos: Photo[] = [
   { id: 1, src: '/images/album1.jpg', alt: 'Image 1', date: '2023-10-01' },
   { id: 2, src: '/images/album1.jpg', alt: 'Image 1', date: '2023-10-01' },
   { id: 3, src: '/images/album1.jpg', alt: 'Image 1', date: '2023-10-01' },
@@ -31,14 +31,4 @@ export const favoritePhotos: Photo[] = [
   { id: 24, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
   { id: 25, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
   { id: 26, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
-  { id: 27, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
-  { id: 28, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
-  { id: 29, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
-  { id: 30, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
-  { id: 31, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
-  { id: 32, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
-  { id: 33, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
-  { id: 34, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
-  { id: 35, src: '/images/album4.jpg', alt: 'Image 4', date: '2023-10-04' },
-  { id: 36, src: '/images/album3.jpg', alt: 'Image 3', date: '2023-10-05' },
 ];

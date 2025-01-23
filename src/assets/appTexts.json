@@ -52,5 +52,35 @@
 		"emptyFavoritesMessage": "Ajoutez vos photos préférées ici pour un accès rapide.",
 		"deleteSelectedAction": "Supprimer les photos sélectionnées",
 		"addFavoritesAction": "Ajouter aux favoris"
+	},
+	"PrivatePage": {	
+		"title": "Mes Photos Privées",
+		"emptyFavoritesTitle": "Aucune photo privée",
+		"emptyFavoritesMessage": "Ajoutez des photos privées pour les voir ici.",
+		"actionLabel": "Ajouter des photos",
+		"deleteSelectedAction": "Supprimer les photos sélectionnées",
+		"addFavoritesAction": "Ajouter aux favoris",
+		"AccessPrivatePageForm": {
+			"title": "Accédez à vos photos protégées",
+			"message": "Veuillez saisir votre code PIN pour accéder à vos photos privées.",
+			"buttonLabel": "Se connecter"
+		},
+		"PinModal": {
+			"title": "Sécurisez vos photos privées",
+			"successTitle": "Code PIN enregistré !",
+			"label": "Code PIN",
+			"confirmationLabel": "Confirmez le code PIN",
+			"successMessage": "Votre code PIN a été enregistré avec succès. Vous pouvez maintenant accéder à vos photos privées.",
+			"instruction": "Veuillez créer un code PIN à 6 chiffres et le confirmer pour protéger l'accès à vos photos privées.",
+			"errorMessages": {
+				"invalidLength": "Veuillez saisir un code PIN à 6 chiffres dans les deux champs.",
+				"mismatch": "Les codes PIN ne correspondent pas."
+			},
+			"buttonLabels": {
+				"cancel": "Annuler",
+				"submit": "Valider"
+			}
+		}
 	}
+	
 }

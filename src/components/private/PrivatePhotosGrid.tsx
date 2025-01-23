@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { favoritePhotos } from '@/services/favorites/favoritePhotoService';
 import PageHeader from '../customs/PageHeader';
 import appTexts from '@/assets/appTexts.json';
 import { groupPhotosByDate } from '@/lib/groupPhotosByDate';
-import ZoomModal from './ZoomModal';
 import DateGroup from '../customs/DateGroup';
 import EmptyPage from '../customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import { Photo } from '@/types/types';
+import { privatePhotos } from '@/services/private/privatePhotoService';
+import ZoomModal from '../favorites/ZoomModal';
 
-
-const FavoritePhotosGrid: React.FC = () => {
-  const texts = appTexts.AlbumDetailPage;
+const PrivatePhotosGrid: React.FC = () => {
+  const texts = appTexts.PrivatePage;
   const params = useParams();
   const albumId = parseInt(params?.id as string, 10);
 
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
-  const [images, setImages] = useState<Photo[]>(favoritePhotos);
+  const [images, setImages] = useState<Photo[]>([]);
   const [zoomedImageIndex, setZoomedImageIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Charger les photos privées depuis une API ou un service
+    setImages(privatePhotos);
+  }, []);
 
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
@@ -30,30 +34,48 @@ const FavoritePhotosGrid: React.FC = () => {
     setSelectedImages(newSelected);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const newImage = {
-            id: images.length + 1,
-            src: reader.result as string,
-            alt: file.name,
-            date: new Date().toISOString().split('T')[0],
-          };
-          setImages((prevImages) => [...prevImages, newImage]);
-        };
-        reader.readAsDataURL(file);
-      });
+      try {
+        const newImages = await Promise.all(
+          Array.from(files).map(async (file) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              const newImage = {
+                id: images.length + 1,
+                src: reader.result as string,
+                alt: file.name,
+                date: new Date().toISOString().split('T')[0],
+              };
+              setImages((prevImages) => [...prevImages, newImage]);
+            };
+            reader.readAsDataURL(file);
+          })
+        );
+      } catch (error) {
+        console.error('Erreur lors de l\'importation des images :', error);
+      }
     }
   };
 
-  const handleDeleteSelectedImages = () => {
-    setImages((prevImages) =>
-      prevImages.filter((_, index) => !selectedImages.has(index))
-    );
-    setSelectedImages(new Set());
+  const handleDeleteSelectedImages = async () => {
+    try {
+      // Supprimer les images sélectionnées côté serveur
+      await Promise.all(
+        Array.from(selectedImages).map((id) =>
+          fetch(`/api/private-photos/${id}`, { method: 'DELETE' })
+        )
+      );
+
+      // Mettre à jour l'état local
+      setImages((prevImages) =>
+        prevImages.filter((_, index) => !selectedImages.has(index))
+      );
+      setSelectedImages(new Set());
+    } catch (error) {
+      console.error('Erreur lors de la suppression des images :', error);
+    }
   };
 
   const handleSelectSimilarImages = () => {
@@ -85,27 +107,39 @@ const FavoritePhotosGrid: React.FC = () => {
     setSelectedImages(newSelected);
   };
 
-  // Grouper les photos par date
   const groupedPhotos = groupPhotosByDate(images);
 
-  // Fonction pour passer à l'image suivante
   const handleNextImage = () => {
     if (zoomedImageIndex !== null && zoomedImageIndex < images.length - 1) {
       setZoomedImageIndex(zoomedImageIndex + 1);
     }
   };
 
-  // Fonction pour revenir à l'image précédente
   const handlePreviousImage = () => {
     if (zoomedImageIndex !== null && zoomedImageIndex > 0) {
       setZoomedImageIndex(zoomedImageIndex - 1);
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (zoomedImageIndex !== null) {
+        if (event.key === 'ArrowRight') {
+          handleNextImage();
+        } else if (event.key === 'ArrowLeft') {
+          handlePreviousImage();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [zoomedImageIndex]);
+
   return (
     <div className="p-4">
       <PageHeader
-        title="Mes Favoris"
+        title={texts.title}
         onFileChange={handleFileChange}
         onDeleteSelectedImages={handleDeleteSelectedImages}
         onSelectSimilarImages={handleSelectSimilarImages}
@@ -118,10 +152,10 @@ const FavoritePhotosGrid: React.FC = () => {
       <div className="mt-4 ml-10 mr-10">
         {images.length === 0 ? (
           <EmptyPage
-            title="Aucune image favorite"
-            message="Ajoutez des images à vos favoris pour les voir ici."
+            title={texts.emptyFavoritesTitle}
+            message={texts.emptyFavoritesMessage}
             imageSrc={<AlbumAnimateSVG />}
-            actionLabel="Ajouter des images"
+            actionLabel={texts.actionLabel}
             onFileChange={handleFileChange}
           />
         ) : (
@@ -153,4 +187,4 @@ const FavoritePhotosGrid: React.FC = () => {
   );
 };
 
-export default FavoritePhotosGrid;
+export default PrivatePhotosGrid;

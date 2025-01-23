@@ -23,17 +23,17 @@ const navItems = [
 		icon: AlbumsIcon,
 		label: appTexts.sidebar.navigation.albums,
 	},
-	{
-		href: '/archive',
-		icon: ArchiveIcon,
-		label: appTexts.sidebar.navigation.archive,
-	},
+	// {
+	// 	href: '/archive',
+	// 	icon: ArchiveIcon,
+	// 	label: appTexts.sidebar.navigation.archive,
+	// },
 	{
 		href: '/private',
 		icon: PrivateHeartIcon,
 		label: appTexts.sidebar.navigation.private,
 	},
-	{ href: '/share', icon: ShareIcon, label: appTexts.sidebar.navigation.share },
+	// { href: '/share', icon: ShareIcon, label: appTexts.sidebar.navigation.share },
 	{
 		href: '/trash',
 		icon: DeletePictureIcon,

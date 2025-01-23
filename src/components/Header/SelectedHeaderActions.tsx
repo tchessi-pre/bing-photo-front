@@ -1,3 +1,4 @@
+// components/SelectedHeaderActions.tsx
 'use client';
 
 import React from 'react';
@@ -7,6 +8,7 @@ import AddToFavoriteIcon from '@/assets/icons/gallery-favourite-svgrepo-com.svg'
 import DeleteIcon from '@/assets/icons/trash.svg';
 import ShareIcon from '@/assets/icons/share.svg';
 import AddSquareIcon from '@/assets/icons/add-square-svgrepo-com.svg';
+import PrivateHeartIcon from '@/assets/icons/private-heart.svg';
 
 type SelectedHeaderActionsProps = {
   isVisible: boolean;
@@ -15,6 +17,7 @@ type SelectedHeaderActionsProps = {
   onFavorite?: () => void;
   onDelete?: () => void;
   onShare?: () => void;
+  onPrivate?: () => void;
 };
 
 const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
@@ -23,7 +26,8 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
   onClose,
   onFavorite,
   onDelete,
-  onShare
+  onShare,
+  onPrivate
 }) => {
   return (
     <AnimatePresence>
@@ -55,22 +59,29 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
           </button>
 
           {/* Compteur d'images sélectionnées */}
-          {/* <div className="text-sm font-medium text-gray-600">
+          <div className="text-sm font-medium text-gray-600">
             {selectedImagesCount} image
             {selectedImagesCount > 1 ? 's' : ''} sélectionnée
             {selectedImagesCount > 1 ? 's' : ''}
-          </div> */}
-          <button
-            onClick={onDelete}
-            className="flex flex-col items-center justify-center text-gray-600 hover:text-red-600 hover:scale-110 transition-transform duration-200"
-          >
-            <DeleteIcon className="w-8 h-8" />
-          </button>
+          </div>
+          
           <button
             onClick={onShare}
             className="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 hover:scale-110 transition-transform duration-200"
           >
             <ShareIcon className="w-8 h-8" />
+          </button>
+          <button
+            onClick={onPrivate}
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 hover:scale-110 transition-transform duration-200"
+          >
+            <PrivateHeartIcon className="w-8 h-8" />
+          </button>
+          <button
+            onClick={onDelete}
+            className="flex flex-col items-center justify-center text-gray-600 hover:text-red-600 hover:scale-110 transition-transform duration-200"
+          >
+            <DeleteIcon className="w-8 h-8" />
           </button>
         </motion.div>
       )}

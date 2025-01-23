@@ -2,16 +2,7 @@
 
 import React from 'react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-
-type Album = {
-  id: number;
-  title: string;
-};
-
-type AlbumSelectProps = {
-  albums: Album[];
-  onAlbumChange: (albumId: number) => void;
-};
+import { AlbumSelectProps } from '@/types/types';
 
 const AlbumSelect: React.FC<AlbumSelectProps> = ({ albums, onAlbumChange }) => {
   return (

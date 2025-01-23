@@ -19,7 +19,8 @@
     "store": "@/store",
     "api": "@/api",
     "icons": "@/assets/icons",
-    "services": "@/services"
+    "services": "@/services",
+    "types": "@/types"
   },
   "iconLibrary": "lucide"
 }
