@@ -11,12 +11,12 @@ import HomePage from './page';
 
 // Importation des polices locales
 const robotoSans = localFont({
-	src: './fonts/RobotoFlex.ttf',
+	src: '../assets/fonts/RobotoFlex.ttf',
 	variable: '--font-roboto-sans',
 	weight: '100 900',
 });
 const robotoMono = localFont({
-	src: './fonts/RobotoMono.ttf',
+	src: '../assets/fonts/RobotoMono.ttf',
 	variable: '--font-roboto-mono',
 	weight: '100 900',
 });

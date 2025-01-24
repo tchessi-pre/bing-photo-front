@@ -3,17 +3,18 @@ import OTPInput from './OTPInput';
 import { Button } from '@/components/ui/button';
 import appTexts from '@/assets/appTexts.json';
 
-type AccessPrivatePageForm = {
+type AccessPrivatePageFormProps = {
   onSubmit: (pin: string) => void;
   error?: string;
 };
 
-const AccessPrivatePageForm: React.FC<AccessPrivatePageForm> = ({ onSubmit, error }) => {
+const AccessPrivatePageForm: React.FC<AccessPrivatePageFormProps> = ({ onSubmit, error }) => {
   const [pin, setPin] = useState('');
   const texts = appTexts.PrivatePage.AccessPrivatePageForm;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(pin);
+    onSubmit(pin); // Appel de la fonction onSubmit avec la valeur de pin
   };
 
   return (
