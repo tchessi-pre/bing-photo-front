@@ -9,6 +9,7 @@ import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import { Photo } from '@/types/types';
 import { privatePhotos } from '@/services/private/privatePhotoService';
 import ZoomModal from '../favorites/ZoomModal';
+import { motion } from 'framer-motion';
 
 const PrivatePhotosGrid: React.FC = () => {
   const texts = appTexts.PrivatePage;
@@ -137,7 +138,12 @@ const PrivatePhotosGrid: React.FC = () => {
   }, [zoomedImageIndex]);
 
   return (
-    <div className="p-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: 'easeOut' }}
+      className="p-4"
+    >
       <PageHeader
         title={texts.title}
         onFileChange={handleFileChange}
@@ -151,24 +157,36 @@ const PrivatePhotosGrid: React.FC = () => {
       />
       <div className="mt-4 ml-10 mr-10">
         {images.length === 0 ? (
-          <EmptyPage
-            title={texts.emptyFavoritesTitle}
-            message={texts.emptyFavoritesMessage}
-            imageSrc={<AlbumAnimateSVG />}
-            actionLabel={texts.actionLabel}
-            onFileChange={handleFileChange}
-          />
-        ) : (
-          groupedPhotos.map((group) => (
-            <DateGroup
-              key={group.date}
-              date={group.date}
-              photos={group.photos}
-              selectedImages={selectedImages}
-              onSelectAllByDate={handleSelectAllByDate}
-              onSelect={handleImageSelect}
-              onZoom={setZoomedImageIndex}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <EmptyPage
+              title={texts.emptyFavoritesTitle}
+              message={texts.emptyFavoritesMessage}
+              imageSrc={<AlbumAnimateSVG />}
+              actionLabel={texts.actionLabel}
+              onFileChange={handleFileChange}
             />
+          </motion.div>
+        ) : (
+          groupedPhotos.map((group, index) => (
+            <motion.div
+              key={group.date}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <DateGroup
+                date={group.date}
+                photos={group.photos}
+                selectedImages={selectedImages}
+                onSelectAllByDate={handleSelectAllByDate}
+                onSelect={handleImageSelect}
+                onZoom={setZoomedImageIndex}
+              />
+            </motion.div>
           ))
         )}
       </div>
@@ -183,7 +201,7 @@ const PrivatePhotosGrid: React.FC = () => {
           onPrevious={handlePreviousImage}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

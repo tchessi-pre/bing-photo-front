@@ -35,7 +35,7 @@ const CircularImages: React.FC<CircularImagesProps> = ({ trail }) => {
 						alt={`Photo ${index + 1}`}
 						width={120}
 						height={120}
-						className='object-cover shadow-md'
+						className='object-cover shadow-md '
 					/>
 				</animated.div>
 			))}

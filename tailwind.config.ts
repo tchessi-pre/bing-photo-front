@@ -57,11 +57,22 @@ export default {
 		animation: {
 			'spin-slow': 'spin 20s linear infinite',
 			'fade-in': 'fadeIn 0.2s ease-out forwards',
+			'pulse': 'pulse 2s ease-in-out infinite',
 		},
 		keyframes: {
 			fadeIn: {
 				'0%': { opacity: '0', transform: 'translateY(50px)' },
 				'100%': { opacity: '1', transform: 'translateY(0)' },
+			},
+			pulse: {
+				'0%, 100%': {
+					transform: 'scale(1)',
+					opacity: '1',
+				},
+				'50%': {
+					transform: 'scale(1.2)',
+					opacity: '0.7',
+				},
 			},
 		},
 	},

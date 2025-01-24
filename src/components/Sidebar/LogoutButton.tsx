@@ -16,6 +16,7 @@ import appTexts from '@/assets/appTexts.json';
 const LogoutButton: React.FC = () => {
 	const texts = appTexts.sidebar.logoutButton;
 	const [open, setOpen] = useState(false);
+	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 	const router = useRouter();
 
 	const handleLogout = () => {
@@ -27,17 +28,23 @@ const LogoutButton: React.FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<button className='relative group block py-2 px-2 rounded hover:bg-gray-300'>
+				<button
+					className='relative block py-2 px-2 rounded hover:bg-gray-300'
+					onMouseEnter={() => setIsTooltipVisible(true)}
+					onMouseLeave={() => setIsTooltipVisible(false)}
+				>
 					<LogoutIcon className='w-8 h-8 transform transition-transform duration-200 ease-in-out hover:scale-110' />
-					<span
-						className='absolute left-12 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200'
-						style={{
-							clipPath: 'polygon(10% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%)',
-							marginLeft: '10px',
-						}}
-					>
-						{texts.tooltip}
-					</span>
+					{isTooltipVisible && ( 
+						<span
+							className='absolute left-12 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm rounded px-2 py-1 transition-opacity duration-200'
+							style={{
+								clipPath: 'polygon(10% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 50%)',
+								marginLeft: '10px',
+							}}
+						>
+							{texts.tooltip}
+						</span>
+					)}
 				</button>
 			</DialogTrigger>
 

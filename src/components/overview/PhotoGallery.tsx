@@ -20,9 +20,9 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
     if (newSelected.has(id)) {
-      newSelected.delete(id);
+      newSelected.delete(id); // Désélectionner l'image
     } else {
-      newSelected.add(id);
+      newSelected.add(id); // Sélectionner l'image
     }
     setSelectedImages(newSelected);
   };
@@ -101,7 +101,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                 return (
                   <motion.div
                     key={photo.id}
-                    className={`relative overflow-hidden shadow-lg group w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)]`}
+                    className={`relative overflow-hidden shadow-lg group w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)] cursor-pointer`}
                     initial={{ borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }}
                     animate={
                       isSelected
@@ -109,6 +109,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                         : { borderWidth: 0, borderColor: 'transparent', borderRadius: '0px' }
                     }
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    onClick={() => handleImageSelect(photo.id)}
                   >
                     <motion.img
                       src={photo.src}
@@ -131,12 +132,16 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
 
                     {isFavorite && (
                       <motion.div
-                        className="absolute top-2 left-2 text-orange-500 gray-700/50 rounded-full p-2 shadow-md"
+                        className="absolute top-2 left-2 text-orange-500 gray-700/50 rounded-full p-2 shadow-md cursor-pointer"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ duration: 0.3 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleImageSelect(photo.id);
+                        }}
                       >
-                        <Heart className="w-5 h-5 " />
+                        <Heart className="w-6 h-6 text-orange-500 fill-current" />
                       </motion.div>
                     )}
 
@@ -178,7 +183,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
               console.log(`Sélectionner l'image : ${index}`);
             }}
           />
-
         )}
 
         {/* Confirmation Dialog */}

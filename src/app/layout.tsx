@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import Header from '@/components/Header/Header';
 import NoSSR from '@/lib/NoSSR';
@@ -8,6 +8,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { usePathname } from 'next/navigation';
 import HomePage from './page';
+import Loader from '@/components/Loader/Loader';
 
 // Importation des polices locales
 const robotoSans = localFont({
@@ -24,29 +25,36 @@ const robotoMono = localFont({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const isWelcomePage = pathname === '/';
+	const [isLoading, setIsLoading] = useState(true);
 
-	// États pour gérer les images sélectionnées
-	const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
+	// Simuler un chargement asynchrone
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setIsLoading(false);
+		}, 2000); // Simule un chargement de 2 secondes
+
+		return () => clearTimeout(timer);
+	}, []);
 
 	return (
 		<html lang="en">
 			<body className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}>
 				<NoSSR>
-					{isWelcomePage ? (
+					{isLoading ? (
+						<Loader />
+					) : isWelcomePage ? (
 						<HomePage />
 					) : (
 						<div className="flex h-screen">
-							{/* Header avec gestion des images sélectionnées */}
 							<Header
 								onDownload={() => console.log('Télécharger')}
 								placeholder="Rechercher..."
-								selectedImages={Array.from(selectedImages)}
-								onClose={() => setSelectedImages(new Set())}
+								selectedImages={[]}
+								onClose={() => { }}
 								onFavorite={() => console.log('Ajouter aux favoris')}
 								onDelete={() => console.log('Supprimer')}
 								onShare={() => console.log('Partager')}
 							/>
-
 							<Sidebar />
 							<main className="flex-1 flex justify-center p-6">{children}</main>
 						</div>

@@ -9,7 +9,7 @@ import DateGroup from '../customs/DateGroup';
 import EmptyPage from '../customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import { Photo } from '@/types/types';
-
+import { motion } from 'framer-motion'; // Importer motion depuis framer-motion
 
 const FavoritePhotosGrid: React.FC = () => {
   const texts = appTexts.AlbumDetailPage;
@@ -103,7 +103,12 @@ const FavoritePhotosGrid: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }} // État initial : invisible et légèrement décalé vers le bas
+      animate={{ opacity: 1, y: 0 }} // État animé : visible et à sa position normale
+      transition={{ duration: 0.5, ease: 'easeOut' }} // Durée et type de transition
+      className="p-4"
+    >
       <PageHeader
         title="Mes Favoris"
         onFileChange={handleFileChange}
@@ -117,24 +122,36 @@ const FavoritePhotosGrid: React.FC = () => {
       />
       <div className="mt-4 ml-10 mr-10">
         {images.length === 0 ? (
-          <EmptyPage
-            title="Aucune image favorite"
-            message="Ajoutez des images à vos favoris pour les voir ici."
-            imageSrc={<AlbumAnimateSVG />}
-            actionLabel="Ajouter des images"
-            onFileChange={handleFileChange}
-          />
-        ) : (
-          groupedPhotos.map((group) => (
-            <DateGroup
-              key={group.date}
-              date={group.date}
-              photos={group.photos}
-              selectedImages={selectedImages}
-              onSelectAllByDate={handleSelectAllByDate}
-              onSelect={handleImageSelect}
-              onZoom={setZoomedImageIndex}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }} // Animation pour la page vide
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }} // Délai pour un effet en cascade
+          >
+            <EmptyPage
+              title="Aucune image favorite"
+              message="Ajoutez des images à vos favoris pour les voir ici."
+              imageSrc={<AlbumAnimateSVG />}
+              actionLabel="Ajouter des images"
+              onFileChange={handleFileChange}
             />
+          </motion.div>
+        ) : (
+          groupedPhotos.map((group, index) => (
+            <motion.div
+              key={group.date}
+              initial={{ opacity: 0, y: 20 }} // Animation pour chaque groupe de dates
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }} // Délai pour un effet en cascade
+            >
+              <DateGroup
+                date={group.date}
+                photos={group.photos}
+                selectedImages={selectedImages}
+                onSelectAllByDate={handleSelectAllByDate}
+                onSelect={handleImageSelect}
+                onZoom={setZoomedImageIndex}
+              />
+            </motion.div>
           ))
         )}
       </div>
@@ -149,7 +166,7 @@ const FavoritePhotosGrid: React.FC = () => {
           onPrevious={handlePreviousImage}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 

@@ -75,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({
 				<>
 					{!isMobile && (
 						<div className="flex items-center">
-							<LogoIcon />
+								<LogoIcon className='w-8 h-8 mt-2 cursor-pointer transform hover:rotate-45 transition-transform duration-300' />
 							<Logo />
 						</div>
 					)}
