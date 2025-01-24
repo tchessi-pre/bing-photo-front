@@ -5,6 +5,7 @@ import { groupPhotosByDate, Photo } from '@/services/album/photoService';
 import Header from '@/components/Header/Header';
 import ImageModal from '@/components/customs/ImageModal';
 import ConfirmationDialog from '@/components/customs/ConfirmationDialog';
+import ShareModal from '@/components/share/ShareModal'; // Importer le composant ShareModal
 
 type PhotoGalleryProps = {
   photos: Photo[];
@@ -16,6 +17,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [favoriteImages, setFavoriteImages] = useState<Set<number>>(new Set());
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // État pour le modal de partage
 
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
@@ -65,8 +67,11 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   };
 
   const handleShare = () => {
-    console.log('Images partagées:', Array.from(selectedImages));
+    setIsShareModalOpen(true); // Ouvrir le modal de partage
   };
+
+  // Récupérer les images sélectionnées
+  const selectedPhotos = photos.filter((photo) => selectedImages.has(photo.id));
 
   return (
     <div className="w-full">
@@ -192,6 +197,13 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
           onCancel={handleCancelDelete}
           title="Supprimer les images"
           description="Êtes-vous sûr de vouloir supprimer les images sélectionnées ? Cette action est irréversible."
+        />
+
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          selectedImages={selectedPhotos}
         />
       </div>
     </div>

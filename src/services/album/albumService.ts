@@ -127,6 +127,26 @@ const albums: Album[] = [
       { src: '/images/album4.jpg', alt: 'Image 4' },
     ],
   },
+  {
+    id: 13,
+    title: 'A la cascade',
+    images: [
+      { src: '/images/album1.jpg', alt: 'Image 1' },
+      { src: '/images/album2.jpg', alt: 'Image 2' },
+      { src: '/images/album3.jpg', alt: 'Image 3' },
+      { src: '/images/album4.jpg', alt: 'Image 4' },
+    ],
+  },
+  {
+    id: 14,
+    title: 'Pique-nique à Borély',
+    images: [
+      { src: '/images/album1.jpg', alt: 'Image 1' },
+      { src: '/images/album2.jpg', alt: 'Image 2' },
+      { src: '/images/album3.jpg', alt: 'Image 3' },
+      { src: '/images/album4.jpg', alt: 'Image 4' },
+    ],
+  },
 ];
 
 /**
