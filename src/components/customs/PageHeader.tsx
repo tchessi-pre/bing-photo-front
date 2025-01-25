@@ -8,6 +8,7 @@ import DeleteIcon from '@/assets/icons/trash.svg';
 import KillerFeatureIcon from '@/assets/icons/magic-stick-3-svgrepo-com.svg';
 import { usePathname } from 'next/navigation';
 import { ConfirmationDialog, TooltipCustom } from '@/components/customs';
+import { motion } from 'framer-motion';
 
 type PageHeaderProps = {
   title: string;
@@ -56,19 +57,39 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           </span>
         )}
         {imageCount !== undefined && (
+          <motion.div
+            className="rounded-full cursor-pointer"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
           <span className="text-sm font-medium text-primary bg-gray-200 px-3 py-1 rounded-full">
             {imageCount} photo{imageCount > 1 ? 's' : ''}
           </span>
+          </motion.div>
         )}
         {selectedImageCount !== undefined && selectedImageCount > 0 && (
+          <motion.div
+            className="rounded-full cursor-pointer"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
           <span className="text-sm font-medium text-primary bg-green-200 px-3 py-1 rounded-full">
             {selectedImageCount} sélectionnée{selectedImageCount > 1 ? 's' : ''}
           </span>
+          </motion.div>
         )}
       </div>
       <div className="flex items-center gap-4">
         {/* Bouton de suppression */}
         {selectedImageCount !== undefined && selectedImageCount > 0 && (
+          <motion.div
+            className="rounded-full cursor-pointer"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
           <TooltipCustom message="Supprime les images" position="bottom">
             <Button
               onClick={handleDeleteClick}
@@ -76,7 +97,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             >
               <DeleteIcon style={{ width: '25px', height: '25px' }} />
             </Button>
-          </TooltipCustom>
+            </TooltipCustom>
+          </motion.div>
         )}
 
         {/* Bouton pour sélectionner les images similaires */}
