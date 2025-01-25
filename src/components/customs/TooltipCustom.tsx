@@ -1,14 +1,19 @@
-// 'use client';
-
-import React, { ReactNode } from 'react';
+// components/TooltipCustom.tsx
+import React from 'react';
 
 type TooltipCustomProps = {
-  children: ReactNode; // Contenu qui déclenche le tooltip (par ex. un bouton ou une icône)
-  message: string; // Message à afficher dans le tooltip
-  position?: 'top' | 'bottom' | 'left' | 'right'; // Position du tooltip
+  children: React.ReactNode;
+  message: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  isVisible?: boolean;
 };
 
-const TooltipCustom: React.FC<TooltipCustomProps> = ({ children, message, position = 'top' }) => {
+const TooltipCustom: React.FC<TooltipCustomProps> = ({
+  children,
+  message,
+  position = 'top',
+  isVisible = false,
+}) => {
   const positionClasses = {
     top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
     bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
@@ -17,13 +22,15 @@ const TooltipCustom: React.FC<TooltipCustomProps> = ({ children, message, positi
   };
 
   return (
-    <div className="relative group">
+    <div className="relative">
       {children}
-      <span
-        className={`absolute px-3 py-1 text-sm text-white bg-gray-800 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg whitespace-nowrap ${positionClasses[position]}`}
-      >
-        {message}
-      </span>
+      {isVisible && (
+        <span
+          className={`absolute px-3 py-1 mt-4 text-sm text-white bg-gray-800 rounded-lg shadow-lg whitespace-nowrap ${positionClasses[position]}`}
+        >
+          {message}
+        </span>
+      )}
     </div>
   );
 };

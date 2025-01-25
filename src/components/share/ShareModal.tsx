@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Photo } from '@/types/types';
@@ -13,7 +12,7 @@ type ShareModalProps = {
 
 const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages }) => {
   if (!isOpen) return null;
-  
+
   // Fonction pour copier le lien dans le presse-papiers
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link).then(() => {
@@ -41,9 +40,10 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages
         <h2 className="text-xl font-bold mb-4">Partager les images sélectionnées</h2>
         <div className="grid grid-cols-1 gap-4">
           {selectedImages.map((image) => {
-            // Générer un lien unique avec l'ID hashé
+            // Générer un lien unique avec l'ID hashé et le nom de l'image
             const hashedId = hashId(image.id);
-            const imageLink = `${window.location.origin}/image/${hashedId}`;
+            const imageName = encodeURIComponent(image.alt || 'image'); // Encoder le nom de l'image
+            const imageLink = `${window.location.origin}/image/${hashedId}/${imageName}`;
 
             return (
               <div key={image.id} className="border p-4 rounded-lg">
