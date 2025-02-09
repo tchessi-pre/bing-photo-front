@@ -11,6 +11,7 @@ type PinModalProps = {
 
 const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const texts = appTexts.PrivatePage.PinModal;
+
   const [pin, setPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
   const [error, setError] = useState('');
@@ -19,27 +20,32 @@ const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Vérification que les PINs ont 6 chiffres
     if (pin.length !== 6 || confirmPin.length !== 6) {
-      setError('Veuillez saisir un code PIN à 6 chiffres dans les deux champs.');
+      setError(texts.errorMessages.invalidLength);
       return;
     }
 
+    // Vérification que les deux PINs correspondent
     if (pin !== confirmPin) {
-      setError('Les codes PIN ne correspondent pas.');
+      setError(texts.errorMessages.mismatch);
       return;
     }
 
+    // Enregistre le PIN et signale le succès
     localStorage.setItem('privatePin', pin);
     onSubmit(pin);
     setIsConfirmed(true);
     setError('');
 
+    // Refermer la modale après un délai
     setTimeout(() => {
       onClose();
       setIsConfirmed(false);
     }, 2000);
   };
 
+  // Réinitialise l’état lorsqu’on ouvre la modale
   useEffect(() => {
     if (isOpen) {
       setIsConfirmed(false);
@@ -89,16 +95,14 @@ const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSubmit }) => {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <p className="text-lg text-gray-700 text-center">
-                {texts.successMessage}
-              </p>
+              <p className="text-lg text-gray-700 text-center">{texts.successMessage}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {texts.label}
+                    {texts.label}
                   </label>
                   <OTPInput value={pin} onChange={setPin} />
                 </div>

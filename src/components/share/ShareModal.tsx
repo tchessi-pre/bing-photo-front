@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Photo } from '@/types/types';
 import { Copy } from 'lucide-react';
 import { hashId } from '@/lib/helpers';
+import appTexts from '@/assets/appTexts.json';
 
 type ShareModalProps = {
   isOpen: boolean;
@@ -11,12 +14,16 @@ type ShareModalProps = {
 };
 
 const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages }) => {
+  // Récupère les textes depuis la section ShareModal de votre JSON
+  const texts = appTexts.ShareModal;
+
   if (!isOpen) return null;
 
   // Fonction pour copier le lien dans le presse-papiers
   const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link).then(() => {
-      alert('Lien copié dans le presse-papiers !');
+      // Utilisez le texte issu de votre JSON
+      alert(texts.copyAlert);
     });
   };
 
@@ -37,12 +44,12 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages
         className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4">Partager les images sélectionnées</h2>
+        <h2 className="text-xl font-bold mb-4">{texts.title}</h2>
         <div className="grid grid-cols-1 gap-4">
           {selectedImages.map((image) => {
             // Générer un lien unique avec l'ID hashé et le nom de l'image
             const hashedId = hashId(image.id);
-            const imageName = encodeURIComponent(image.alt || 'image'); // Encoder le nom de l'image
+            const imageName = encodeURIComponent(image.alt || 'image');
             const imageLink = `${window.location.origin}/image/${hashedId}/${imageName}`;
 
             return (
@@ -54,7 +61,9 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages
                     className="w-24 h-24 object-cover rounded-lg"
                   />
                   <div className="flex-1">
-                    <p className="text-sm text-gray-600 mb-2">Lien de partage :</p>
+                    <p className="text-sm text-gray-600 mb-2">
+                      {texts.shareLinkLabel}
+                    </p>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
@@ -80,7 +89,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages
             onClick={onClose}
             className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
           >
-            Fermer
+            {texts.closeButton}
           </button>
         </div>
       </motion.div>

@@ -12,7 +12,7 @@ import { Photo } from '@/types/types';
 import { motion } from 'framer-motion'; // Importer motion depuis framer-motion
 
 const FavoritePhotosGrid: React.FC = () => {
-  const texts = appTexts.AlbumDetailPage;
+  const texts = appTexts.FavoritesPage;
   const params = useParams();
   const albumId = parseInt(params?.id as string, 10);
 
@@ -110,7 +110,7 @@ const FavoritePhotosGrid: React.FC = () => {
       className="p-4"
     >
       <PageHeader
-        title="Mes Favoris"
+        title={texts.title}
         onFileChange={handleFileChange}
         onDeleteSelectedImages={handleDeleteSelectedImages}
         onSelectSimilarImages={handleSelectSimilarImages}
@@ -123,15 +123,15 @@ const FavoritePhotosGrid: React.FC = () => {
       <div className="mt-4 ml-10 mr-10">
         {images.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }} // Animation pour la page vide
+            initial={{ opacity: 0, scale: 0.9 }} 
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }} // Délai pour un effet en cascade
           >
             <EmptyPage
-              title="Aucune image favorite"
-              message="Ajoutez des images à vos favoris pour les voir ici."
+              title={texts.emptyFavoritesTitle}
+              message={texts.emptyFavoritesMessage}
               imageSrc={<AlbumAnimateSVG />}
-              actionLabel="Ajouter des images"
+              actionLabel={texts.addFavoritesAction}
               onFileChange={handleFileChange}
             />
           </motion.div>
@@ -139,9 +139,9 @@ const FavoritePhotosGrid: React.FC = () => {
           groupedPhotos.map((group, index) => (
             <motion.div
               key={group.date}
-              initial={{ opacity: 0, y: 20 }} // Animation pour chaque groupe de dates
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }} // Délai pour un effet en cascade
+              transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <DateGroup
                 date={group.date}

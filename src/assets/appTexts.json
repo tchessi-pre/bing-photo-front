@@ -19,6 +19,7 @@
 			"confirmButton": "Déconnexion"
 		},
 		"navigation": {
+			"title": "Menu",
 			"overview": "Afficher tout",
 			"favorites": "Mes favoris",
 			"albums": "Mes Albums",
@@ -40,7 +41,15 @@
 		"emptyPageMessage": "Créez votre premier album pour commencer à organiser vos photos.",
 		"emptyPageActionLabel": "Créer un album",
 		"importAction": "Importer des images",
-		"createAlbumAction": "Créer un nouvel album"
+		"createAlbumAction": "Créer un nouvel album",
+		"albumCreateDialog": {
+			"createAlbumButton": "Créer un album",
+			"dialogTitle": "Créer un nouvel album",
+			"albumTitleLabel": "Titre de l'album",
+			"albumTitlePlaceholder": "Entrez le titre pour l'album",
+			"emptyTitleAlert": "Veuillez entrer un nom pour l'album.",
+			"createButton": "Créer"
+		}
 	},
 	"overviewPage": {
 		"title": "Albums"
@@ -53,7 +62,7 @@
 		"deleteSelectedAction": "Supprimer les photos sélectionnées",
 		"addFavoritesAction": "Ajouter aux favoris"
 	},
-	"PrivatePage": {	
+	"PrivatePage": {
 		"title": "Mes Photos Privées",
 		"emptyFavoritesTitle": "Aucune photo privée",
 		"emptyFavoritesMessage": "Ajoutez des photos privées pour les voir ici.",
@@ -81,6 +90,35 @@
 				"submit": "Valider"
 			}
 		}
+	},
+	"OverviewPage": {
+		"photoGallery": {
+			"searchPlaceholder": "Rechercher...",
+			"consoleFavoritesUpdate": "Images favorites mises à jour :",
+			"consoleDownload": "Télécharger",
+			"defaultPhotoAlt": "Photo sans description",
+			"modalAltPlaceholder": "Image sans description",
+			"consoleDeletedImages": "Images supprimées :",
+			"consoleDeleteImageAtIndex": "Supprimer l'image à l'index :",
+			"consoleAddToAlbumAtIndex": "Ajouter l'image à un album :",
+			"consoleSelectImageAtIndex": "Sélectionner l'image :",
+			"confirmationDialogTitle": "Supprimer les images",
+			"confirmationDialogDescription": "Êtes-vous sûr de vouloir supprimer les images sélectionnées ? Cette action est irréversible."
+		}
+	},
+	"permissionDeniedModal": {
+		"title": "Accès à la caméra refusé",
+		"description": "Veuillez vérifier vos paramètres et réessayer.",
+		"buttonLabel": "OK"
+	},
+	"cameraModal": {
+		"closeButton": "Fermer",
+		"captureButton": "Capturer"
+	},
+	"ShareModal": {
+		"title": "Partager les images sélectionnées",
+		"copyAlert": "Lien copié dans le presse-papiers !",
+		"shareLinkLabel": "Lien de partage :",
+		"closeButton": "Fermer"
 	}
-	
 }

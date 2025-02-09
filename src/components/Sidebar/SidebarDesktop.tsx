@@ -5,8 +5,11 @@ import NavItem from './NavItem';
 import ProfileSection from './ProfileSection';
 import LogoutButton from './LogoutButton';
 import navItems from './navItemsConfig';
+import appTexts from '@/assets/appTexts.json';
 
 const SidebarDesktop: React.FC = () => {
+	const texts = appTexts.sidebar.navigation;
+	
 	return (
 		<div className='fixed z-50 w-18 bg-gray-100 text-white p-2 space-y-1 flex flex-col justify-between'>
 			{/* Logo */}
@@ -19,7 +22,7 @@ const SidebarDesktop: React.FC = () => {
 			{/* Navigation */}
 			<nav className='flex flex-col space-y-1'>
 				<div className='text-center text-gray-500 text-sm font-semibold py-2'>
-					Menu
+					{texts.title}
 				</div>
 				{navItems.map((item) => (
 					<NavItem

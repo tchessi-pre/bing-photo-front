@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CircleCheckBig, ZoomIn, Heart } from 'lucide-react';
@@ -5,41 +7,47 @@ import { groupPhotosByDate, Photo } from '@/services/album/photoService';
 import Header from '@/components/Header/Header';
 import ImageModal from '@/components/customs/ImageModal';
 import ConfirmationDialog from '@/components/customs/ConfirmationDialog';
-import ShareModal from '@/components/share/ShareModal'; // Importer le composant ShareModal
+import ShareModal from '@/components/share/ShareModal';
+import appTexts from '@/assets/appTexts.json';
 
 type PhotoGalleryProps = {
   photos: Photo[];
 };
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
+  const texts = appTexts.OverviewPage.photoGallery;
+
   const groupedPhotos = groupPhotosByDate(photos);
   const [zoomedImageIndex, setZoomedImageIndex] = useState<number | null>(null);
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [favoriteImages, setFavoriteImages] = useState<Set<number>>(new Set());
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // État pour le modal de partage
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  // Sélection d'images
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
     if (newSelected.has(id)) {
-      newSelected.delete(id); // Désélectionner l'image
+      newSelected.delete(id);
     } else {
-      newSelected.add(id); // Sélectionner l'image
+      newSelected.add(id);
     }
     setSelectedImages(newSelected);
   };
 
+  // Fermer la modale de zoom
   const handleCloseModal = () => {
     setZoomedImageIndex(null);
   };
 
+  // Désélectionner toutes les images
   const handleDeselectAll = () => {
     setSelectedImages(new Set());
   };
 
+  // Gestion des favoris
   const handleFavorite = () => {
     const newFavorites = new Set(favoriteImages);
-
     selectedImages.forEach((id) => {
       if (newFavorites.has(id)) {
         newFavorites.delete(id);
@@ -47,27 +55,30 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
         newFavorites.add(id);
       }
     });
-
     setFavoriteImages(newFavorites);
-    console.log('Images favorites mises à jour:', Array.from(newFavorites));
+    console.log(texts.consoleFavoritesUpdate, Array.from(newFavorites));
   };
 
+  // Ouvrir la boîte de dialogue de confirmation de suppression
   const handleOpenDeleteConfirmation = () => {
     setIsConfirmationOpen(true);
   };
 
+  // Confirm. suppression
   const handleConfirmDelete = () => {
-    console.log('Images supprimées:', Array.from(selectedImages));
+    console.log(texts.consoleDeletedImages, Array.from(selectedImages));
     setSelectedImages(new Set());
     setIsConfirmationOpen(false);
   };
 
+  // Annuler suppression
   const handleCancelDelete = () => {
     setIsConfirmationOpen(false);
   };
 
+  // Ouvrir la modale de partage
   const handleShare = () => {
-    setIsShareModalOpen(true); // Ouvrir le modal de partage
+    setIsShareModalOpen(true);
   };
 
   // Récupérer les images sélectionnées
@@ -77,8 +88,8 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
     <div className="w-full">
       {/* Header */}
       <Header
-        onDownload={() => console.log('Télécharger')}
-        placeholder="Rechercher..."
+        onDownload={() => console.log(texts.consoleDownload)}
+        placeholder={texts.searchPlaceholder}
         selectedImages={Array.from(selectedImages)}
         onClose={handleDeselectAll}
         onFavorite={handleFavorite}
@@ -97,7 +108,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                 day: 'numeric',
               })}
             </h3>
-
             <div className="flex flex-wrap gap-4">
               {group.photos.map((photo, photoIndex) => {
                 const isSelected = selectedImages.has(photo.id);
@@ -118,7 +128,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                   >
                     <motion.img
                       src={photo.src}
-                      alt={photo.alt || 'Photo'}
+                      alt={photo.alt || texts.defaultPhotoAlt}
                       className={`w-full h-48 object-cover transition-all duration-500 ${isSelected ? 'filter grayscale opacity-50' : ''
                         }`}
                       whileHover={{ scale: 1.05 }}
@@ -167,25 +177,24 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
           </div>
         ))}
 
-        {/* Modal with Image Viewer */}
+        {/* Modal de visualisation d'images */}
         {zoomedImageIndex !== null && (
           <ImageModal
             images={photos.map((photo) => ({
               src: photo.src,
-              alt: photo.alt || 'Image sans description',
+              alt: photo.alt || texts.modalAltPlaceholder
             }))}
             initialIndex={zoomedImageIndex}
             onClose={handleCloseModal}
             onDelete={(index) => {
-              console.log(`Supprimer l'image à l'index : ${index}`);
-              const updatedPhotos = photos.filter((_, i) => i !== index);
-              // Mettez à jour les photos si nécessaire
+              console.log(`${texts.consoleDeleteImageAtIndex} ${index}`);
+              // Mettez à jour la liste de photos si nécessaire
             }}
             onAddToAlbum={(index) => {
-              console.log(`Ajouter l'image à un album : ${index}`);
+              console.log(`${texts.consoleAddToAlbumAtIndex} ${index}`);
             }}
             onSelect={(index) => {
-              console.log(`Sélectionner l'image : ${index}`);
+              console.log(`${texts.consoleSelectImageAtIndex} ${index}`);
             }}
           />
         )}
@@ -195,11 +204,11 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
           isOpen={isConfirmationOpen}
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
-          title="Supprimer les images"
-          description="Êtes-vous sûr de vouloir supprimer les images sélectionnées ? Cette action est irréversible."
+          title={texts.confirmationDialogTitle}
+          description={texts.confirmationDialogDescription}
         />
 
-        {/* Share Modal */}
+        {/* Modale de partage */}
         <ShareModal
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}

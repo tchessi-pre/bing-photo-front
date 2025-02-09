@@ -14,7 +14,7 @@ const AccessPrivatePageForm: React.FC<AccessPrivatePageFormProps> = ({ onSubmit,
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(pin); // Appel de la fonction onSubmit avec la valeur de pin
+    onSubmit(pin);
   };
 
   return (
