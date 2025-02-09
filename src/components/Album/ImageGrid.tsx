@@ -1,51 +1,97 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CircleCheckBig, ZoomIn } from 'lucide-react';
-import { getRandomGridSpan } from '@/lib/gridUtils';
-import ImageModal from '@/components/customs/ImageModal';
 
+import ImageModal from '@/components/customs/ImageModal';
+import { getRandomGridSpan } from '@/lib/gridUtils';
+import { generateConfetti } from '@/lib/confettiUtils';
+import ScanSuccessMessage from './customs-composents/ScanSuccessMessage';
+
+/** Types pour les props */
 type ImageGridProps = {
 	images: { src: string; alt: string; label?: string }[];
 	selectedImages: Set<number>;
 	onImageSelect: (index: number) => void;
 	onDelete: (index: number) => void;
+	scanning?: boolean;
 };
+
+interface ConfettiItem {
+	left: string; // ex: "45%"
+	color: string; // ex: "#F59E0B"
+}
 
 const ImageGrid: React.FC<ImageGridProps> = ({
 	images,
 	selectedImages,
 	onImageSelect,
+	onDelete,
+	scanning = false,
 }) => {
+	// État pour afficher le modal “zoom”
 	const [zoomedImageIndex, setZoomedImageIndex] = useState<number | null>(null);
 
-	// Gérer les spans de grille de manière immuable
-	const gridSpansRef = useRef(images.map(() => getRandomGridSpan()));
+	// On utilise un ref pour stocker un “span” aléatoire par image (effet mosaïque)
+	const gridSpansRef = useRef<string[]>(images.map(() => getRandomGridSpan()));
 
+	// Permet de détecter la fin du scanning (ancien scanning => nouveau scanning)
+	const prevScanningRef = useRef(scanning);
+
+	// État pour gérer l’affichage du message et des confettis
+	const [isScanResultVisible, setIsScanResultVisible] = useState(false);
+
+	// Tableau de particules confettis
+	const [confettiList, setConfettiList] = useState<ConfettiItem[]>([]);
+
+	// Génère les confettis une fois au montage (ou selon votre logique)
+	useEffect(() => {
+		const newConfetti = generateConfetti(15); // 15 confettis
+		setConfettiList(newConfetti);
+	}, []);
+
+	// Surveille la transition scanning: true -> false => affiche le résultat
+	useEffect(() => {
+		if (prevScanningRef.current === true && scanning === false) {
+			setIsScanResultVisible(true);
+
+			const timer = setTimeout(() => {
+				setIsScanResultVisible(false);
+			}, 3000);
+
+			return () => clearTimeout(timer);
+		}
+		prevScanningRef.current = scanning;
+	}, [scanning]);
+
+	// Fermer le modal de zoom
 	const handleCloseModal = () => {
 		setZoomedImageIndex(null);
 	};
 
-	function handleDelete(index: number): void {
-		throw new Error('Function not implemented.');
-	}
-
-	function handleAddToAlbum(index: number): void {
-		throw new Error('Function not implemented.');
-	}
-
-	function handleSelect(index: number): void {
-		throw new Error('Function not implemented.');
-	}
-
 	return (
-		<div className='bg-white dark:bg-gray-800 min-h-screen py-6 sm:py-8 lg:py-12'>
+		<div className='relative min-h-screen bg-white dark:bg-gray-800 py-6 sm:py-8 lg:py-12'>
+			{/** Overlay pour message + confettis si le scan est terminé */}
+			{isScanResultVisible && (
+				<div className='absolute top-0 left-0 z-50 flex w-full flex-col items-center mt-4'>
+					<ScanSuccessMessage message='Scan terminé avec succès !' />
+					{/* Conteneur confettis */}
+					<div className='relative w-full h-0'>
+						{confettiList.map((item, i) => (
+							<span
+								key={i}
+								className='absolute bottom-0 block w-4 h-4 md:w-3 md:h-3 rounded-full animate-confettiFall'
+								style={{ left: item.left, backgroundColor: item.color }}
+							/>
+						))}
+					</div>
+				</div>
+			)}
+
 			<motion.div
-				className='grid grid-cols-4 gap-4 auto-rows-[150px] md:auto-rows-[200px] w-full'
-				style={{
-					gridAutoFlow: 'dense',
-				}}
+				className='grid w-full grid-cols-4 gap-4 auto-rows-[150px] md:auto-rows-[200px]'
+				style={{ gridAutoFlow: 'dense' }}
 				initial='hidden'
 				animate='visible'
 				variants={{
@@ -60,7 +106,11 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 					return (
 						<motion.div
 							key={index}
-							className={`relative overflow-hidden rounded-lg shadow-lg cursor-pointer group ${gridSpan}`}
+							className={`
+                group relative cursor-pointer 
+                overflow-hidden rounded-lg shadow-lg 
+                ${gridSpan}
+              `}
 							initial={{
 								borderWidth: 0,
 								borderColor: 'transparent',
@@ -88,58 +138,84 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 									transition: { duration: 0.4 },
 								},
 							}}
+							onClick={() => onImageSelect(index)}
 						>
+							{/* Image principale */}
 							<motion.img
 								src={image.src}
 								alt={image.alt}
-								className={`absolute inset-0 w-full h-full object-cover transition-transform duration-300 ${
-									isSelected ? 'filter grayscale opacity-50' : ''
-								}`}
+								className={`
+                  absolute inset-0 h-full w-full object-cover 
+                  transition-transform duration-300
+                  ${isSelected ? 'filter grayscale opacity-50' : ''}
+                `}
 								whileHover={{ scale: 1.05 }}
 							/>
-							<div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50'></div>
+
+							{/* Effet "scan" si scanning === true */}
+							{scanning && (
+								<div className='absolute inset-0 pointer-events-none z-10'>
+									<div
+										className='
+                      absolute top-0 left-0 w-1/2 h-full
+                      bg-gradient-to-r 
+                      from-transparent via-green-500/40 to-transparent
+                      animate-scanning
+                    '
+									/>
+								</div>
+							)}
+
+							{/* Overlay sombre (optionnel) */}
+							<div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50' />
+
+							{/* Icône sélection en haut à droite */}
 							<motion.div
-								className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-1 transition-opacity duration-300 ${
-									isSelected
-										? 'opacity-100'
-										: 'opacity-0 group-hover:opacity-100'
-								}`}
-								onClick={(e) => {
-									e.stopPropagation();
-									onImageSelect(index);
-								}}
-								whileHover={{
-									scale: 1.1,
-								}}
+								className={`
+                  absolute top-2 right-2
+                  rounded-full bg-green-700/50 p-1 text-white
+                  transition-opacity duration-300
+                  ${
+										isSelected
+											? 'opacity-100'
+											: 'opacity-0 group-hover:opacity-100'
+									}
+                `}
+								whileHover={{ scale: 1.1 }}
 							>
-								<CircleCheckBig className='w-6 h-6' />
+								<CircleCheckBig className='h-6 w-6' />
 							</motion.div>
+
+							{/* Icône zoom en bas à droite */}
 							<motion.div
-								className='absolute bottom-2 right-2 text-white bg-gray-700/50 p-1 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100'
+								className='
+                  absolute bottom-2 right-2
+                  rounded-full bg-gray-700/50 p-1 text-white
+                  opacity-0 transition-opacity duration-300
+                  group-hover:opacity-100
+                '
 								onClick={(e) => {
 									e.stopPropagation();
 									setZoomedImageIndex(index);
 								}}
-								whileHover={{
-									scale: 1.1,
-								}}
+								whileHover={{ scale: 1.1 }}
 							>
-								<ZoomIn className='w-6 h-6' />
+								<ZoomIn className='h-6 w-6' />
 							</motion.div>
 						</motion.div>
 					);
 				})}
 			</motion.div>
 
-			{/* Modal avec carrousel */}
+			{/* Modal de zoom */}
 			{zoomedImageIndex !== null && (
 				<ImageModal
 					images={images}
 					initialIndex={zoomedImageIndex}
 					onClose={handleCloseModal}
-					onDelete={handleDelete}
-					onAddToAlbum={handleAddToAlbum}
-					onSelect={handleSelect}
+					onDelete={onDelete}
+					onAddToAlbum={() => null}
+					onSelect={() => null}
 				/>
 			)}
 		</div>

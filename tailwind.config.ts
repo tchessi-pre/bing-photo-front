@@ -58,6 +58,8 @@ export default {
 			'spin-slow': 'spin 20s linear infinite',
 			'fade-in': 'fadeIn 0.2s ease-out forwards',
 			'pulse': 'pulse 2s ease-in-out infinite',
+			scanning: 'scanning 1.2s linear infinite',
+			confettiFall: 'confettiFall 2.5s linear forwards',
 		},
 		keyframes: {
 			fadeIn: {
@@ -72,6 +74,20 @@ export default {
 				'50%': {
 					transform: 'scale(1.2)',
 					opacity: '0.7',
+				},
+			},
+			scanning: {
+				'0%': { transform: 'translateX(-100%)' },
+				'100%': { transform: 'translateX(100%)' },
+			},
+			confettiFall: {
+				'0%': {
+					transform: 'translateY(0) rotateZ(0deg)',
+					opacity: '1',
+				},
+				'100%': {
+					transform: 'translateY(100vh) rotateZ(720deg)',
+					opacity: '0',
 				},
 			},
 		},

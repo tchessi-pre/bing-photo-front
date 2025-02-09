@@ -5,10 +5,12 @@ import { useParams } from 'next/navigation';
 import ImageGrid from '@/components/Album/ImageGrid';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
+
 import {
   getAlbumById,
   toggleImageSelection,
 } from '@/services/album/albumDetailService';
+
 import { PageHeader } from '@/components/Album';
 import { EmptyPage } from '@/components/customs';
 
@@ -21,11 +23,14 @@ const AlbumDetailPage: React.FC = () => {
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [images, setImages] = useState(album ? album.images : []);
 
+  const [scanning, setScanning] = useState(false);
+
   const handleImageSelect = (index: number) => {
     const updatedSelection = toggleImageSelection(selectedImages, index);
     setSelectedImages(updatedSelection);
   };
 
+  // Importation de fichiers
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -40,6 +45,7 @@ const AlbumDetailPage: React.FC = () => {
     }
   };
 
+  // Suppression
   const handleDeleteSelectedImages = () => {
     setImages((prevImages) =>
       prevImages.filter((_, index) => !selectedImages.has(index))
@@ -47,8 +53,10 @@ const AlbumDetailPage: React.FC = () => {
     setSelectedImages(new Set());
   };
 
+  // Sélection d'images similaires (ex: si "alt" contient "similar")
   const handleSelectSimilarImages = () => {
-    // Exemple logique : sélectionnez les images avec des "alt" similaires
+    console.log('Sélection d’images similaires...');
+    // Logique de sélection
     const newSelection = new Set<number>();
     images.forEach((image, index) => {
       if (image.alt.includes('similar')) {
@@ -56,6 +64,13 @@ const AlbumDetailPage: React.FC = () => {
       }
     });
     setSelectedImages(newSelection);
+
+    // On déclenche l’effet “scan”
+    setScanning(true);
+    setTimeout(() => {
+      setScanning(false);
+      console.log('Recherche terminée (fin du scan) !');
+    }, 3000);
   };
 
   if (!album) {
@@ -94,12 +109,14 @@ const AlbumDetailPage: React.FC = () => {
             onFileChange={handleFileChange}
           />
         ) : (
+        
           <ImageGrid
             images={images}
             selectedImages={selectedImages}
-            onImageSelect={handleImageSelect} onDelete={function (index: number): void {
-              throw new Error('Function not implemented.');
-            }} />
+            onImageSelect={handleImageSelect}
+            onDelete={() => null}
+            scanning={scanning}
+          />
         )}
       </div>
     </div>
