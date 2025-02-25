@@ -18,7 +18,7 @@ const AccessPrivatePageForm: React.FC<AccessPrivatePageFormProps> = ({ onSubmit,
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <h2 className="text-2xl font-bold text-center mb-2 text-gray-800">
         {texts.title}
       </h2>

@@ -11,7 +11,7 @@ const SidebarDesktop: React.FC = () => {
 	const texts = appTexts.sidebar.navigation;
 	
 	return (
-		<div className='fixed z-50 w-18 bg-gray-100 text-white p-2 space-y-1 flex flex-col justify-between'>
+		<div className='fixed z-50 w-18 h-[100vh] text-white p-2 space-y-1 flex flex-col'>
 			{/* Logo */}
 			<div className='flex items-center justify-center py-4'>
 				<Link href='/overview' aria-label="Retour à l'accueil">
@@ -32,11 +32,11 @@ const SidebarDesktop: React.FC = () => {
 						label={item.label}
 					/>
 				))}
-				<ProfileSection />
 			</nav>
 
 			{/* Bouton de déconnexion */}
-			<div className='flex items-center justify-center py-4'>
+			<div className='flex  flex-col justify-center py-4 absolute bottom-0 w-full w-18'>
+				<ProfileSection />
 				<LogoutButton />
 			</div>
 		</div>

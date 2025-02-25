@@ -121,13 +121,11 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 									? {
 											borderWidth: 4,
 											borderColor: '#22c55e',
-											borderRadius: '12px',
-									  }
+											borderRadius: '12px',}
 									: {
 											borderWidth: 0,
 											borderColor: 'transparent',
-											borderRadius: '0px',
-									  }
+											borderRadius: '0px',}
 							}
 							transition={{ duration: 0.3, ease: 'easeInOut' }}
 							variants={{
