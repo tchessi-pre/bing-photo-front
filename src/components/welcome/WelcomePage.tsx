@@ -57,7 +57,7 @@ const WelcomePage = () => {
 				<animated.div
 					style={logoSpring}
 					className='cursor-pointer'
-					onClick={() => router.push('/overview')}
+					onClick={() => router.push('/login')}
 				>
 					<Logo className='w-14 h-14' />
 				</animated.div>

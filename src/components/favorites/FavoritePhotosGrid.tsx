@@ -9,7 +9,7 @@ import DateGroup from '../customs/DateGroup';
 import EmptyPage from '../customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import { Photo } from '@/types/types';
-import { motion } from 'framer-motion'; // Importer motion depuis framer-motion
+import { motion } from 'framer-motion';
 
 const FavoritePhotosGrid: React.FC = () => {
   const texts = appTexts.FavoritesPage;

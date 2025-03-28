@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import withPWA from 'next-pwa';
+
 const nextConfig = {
 	webpack(config) {
 		// Grab the existing rule that handles SVG imports
@@ -18,34 +20,16 @@ const nextConfig = {
 				test: /\.svg$/i,
 				issuer: fileLoaderRule.issuer,
 				resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
-				use: {
-					loader: '@svgr/webpack',
-					options: {
-						svgoConfig: {
-							plugins: [
-								{
-									name: 'preset-default',
-									params: {
-										overrides: {
-											removeViewBox: false,
-										},
-									},
-								},
-							],
-						},
-					},
-				},
+				use: ['@svgr/webpack']
 			}
 		);
-
-		// Modify the file loader rule to ignore *.svg, since we have it handled now.
-		fileLoaderRule.exclude = /\.svg$/i;
-
 		return config;
-	},
-	images: {
-		domains: [], 
 	}
 };
 
-export default nextConfig;
+export default withPWA({
+	dest: 'public',
+	disable: process.env.NODE_ENV === 'development',
+	register: true,
+	skipWaiting: true,
+})(nextConfig);

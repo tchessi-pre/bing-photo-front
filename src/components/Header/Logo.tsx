@@ -8,7 +8,7 @@ const Logo: React.FC = () => {
 
 	return (
 		<Link href='/' aria-label={texts.logoAltText}>
-			<BingPhotoLogo className='w-28 h-10 ml-4 cursor-pointer' />
+			<BingPhotoLogo className='w-auto h-auto cursor-pointer mt-2' />
 		</Link>
 	);
 };

@@ -9,6 +9,43 @@
 		"searchPlaceholder": "Rechercher...",
 		"logoAltText": "Retour à l'accueil"
 	},
+	"LoginPage": {
+    "title": "Connexion",
+    "description": "Entrez vos identifiants pour accéder à vos photos",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "loginButton": "Se connecter",
+    "forgotPasswordLink": "Mot de passe oublié ?",
+    "noAccountText": "Pas encore de compte ?",
+    "signupLink": "Inscrivez-vous",
+    "googleButton": "Se connecter avec Google"
+  },
+  "SignupPage": {
+    "title": "Inscription",
+    "description": "Entrez vos informations pour créer un compte",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Entrez votre email",
+		"usernameLabel": "Nom d'utilisateur",
+		"usernamePlaceholder": "Entrez votre nom d'utilisateur",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "confirmPasswordLabel": "Confirmer le mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+    "signupButton": "S'inscrire",
+    "alreadyAccountText": "Déjà un compte ?",
+    "loginLink": "Connectez-vous",
+    "googleButton": "S'inscrire avec Google"
+  },
+	"ForgotPasswordPage": {
+		"title": "Mot de passe oublié",
+		"emailLabel": "Email",
+		"emailPlaceholder": "Entrez votre email",
+		"submitButton": "Envoyer le lien de réinitialisation",
+		"backToLoginPrefix": "Vous vous rappelez de votre mot de passe ?",
+		"backToLoginLink": "Connectez-vous"
+	},
 	"sidebar": {
 		"profileSection": "Profil",
 		"logoutButton": {
@@ -54,7 +91,6 @@
 	"overviewPage": {
 		"title": "Albums"
 	},
-
 	"FavoritesPage": {
 		"title": "Les Favoris",
 		"emptyFavoritesTitle": "Aucun favori pour le moment",

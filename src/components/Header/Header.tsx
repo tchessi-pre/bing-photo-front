@@ -72,19 +72,17 @@ const Header: React.FC<HeaderProps> = ({
 				/>
 			) : (
 				// Header par défaut
-				<>
-					{!isMobile && (
-						<div className="flex items-center">
-								<LogoIcon className='w-8 h-8 mt-2 cursor-pointer transform hover:rotate-45 transition-transform duration-300' />
-							<Logo />
-						</div>
-					)}
+				<div className="flex items-center">
+					<div className="flex items-center justify-normal">
+						<LogoIcon className="mt-2 cursor-pointer transform hover:rotate-45 transition-transform duration-300" />
+						{!isMobile && <Logo />}
+					</div>
 
 					<div className={`flex items-center ${isMobile ? 'w-full justify-between' : ''}`}>
 						<DownloadButton onClick={onDownload} />
 						<SearchInput
 							placeholder={placeholder}
-							className={isMobile ? 'w-44 ml-10' : 'w-auto ml-10'}
+							className={isMobile ? 'w-44 ml-10' : 'w-auto ml-10 mr-10'}
 						/>
 					</div>
 					{isMobile && (
@@ -98,7 +96,7 @@ const Header: React.FC<HeaderProps> = ({
 							/>
 						</div>
 					)}
-				</>
+				</div>
 			)}
 
 			{/* Modale pour créer un code PIN */}
