@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import LogoutIcon from '@/assets/icons/logout.svg';
 import { useRouter } from 'next/navigation';
+import { logout } from '@/services/auth/authService';
 import {
 	Dialog,
 	DialogContent,
@@ -19,10 +20,14 @@ const LogoutButton: React.FC = () => {
 	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 	const router = useRouter();
 
-	const handleLogout = () => {
-		localStorage.removeItem('authToken');
-		router.push('/');
-		setOpen(false);
+	const handleLogout = async () => {
+		try {
+			await logout();
+			router.push('/');
+			setOpen(false);
+		} catch (error) {
+			console.error('Logout failed:', error);
+		}
 	};
 
 	return (
@@ -34,7 +39,7 @@ const LogoutButton: React.FC = () => {
 					onMouseLeave={() => setIsTooltipVisible(false)}
 				>
 					<LogoutIcon className='w-8 h-8 transform transition-transform duration-200 ease-in-out hover:scale-110' />
-					{isTooltipVisible && ( 
+					{isTooltipVisible && (
 						<span
 							className='absolute left-12 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm rounded px-2 py-1 transition-opacity duration-200'
 							style={{

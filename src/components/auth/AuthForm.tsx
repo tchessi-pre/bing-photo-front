@@ -14,6 +14,8 @@ interface AuthFormProps {
 		password: string;
 		confirmPassword?: string;
 	}) => void;
+	isLoading?: boolean;
+	error?: string | null;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit }) => {

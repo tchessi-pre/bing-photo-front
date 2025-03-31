@@ -1,19 +1,25 @@
 import React from 'react';
-import { motion } from 'framer-motion'; // Importez Framer Motion
+import { motion } from 'framer-motion';
 import CameraAimateSvg from '@/assets/svg-animate/camera-animate.svg';
 import AuthForm from './AuthForm';
 import { useMobile } from '@/hooks/useMobile';
 import { containerVariants, itemVariants } from '@/lib/animationVariants';
+import { useAuth } from '@/hooks/auth/useAuth';
 
 const SignUp: React.FC = () => {
 	const isMobile = useMobile();
+	const { signup, isLoading, error } = useAuth();
 
-	const handleSubmit = (formData: {
+	const handleSubmit = async (formData: {
 		email: string;
 		password: string;
 		confirmPassword?: string;
 	}) => {
-		console.log('Signup form submitted:', formData);
+		try {
+			await signup(formData);
+		} catch (error) {
+			console.error('Signup failed:', error);
+		}
 	};
 
 	return (
@@ -42,7 +48,7 @@ const SignUp: React.FC = () => {
 				className='flex-1 flex items-center justify-center'
 				variants={itemVariants}
 			>
-				<AuthForm type='signup' onSubmit={handleSubmit} />
+				<AuthForm type='signup' onSubmit={handleSubmit} isLoading={isLoading} error={error} />
 			</motion.div>
 		</motion.div>
 	);
