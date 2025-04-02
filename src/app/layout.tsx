@@ -22,10 +22,18 @@ const robotoMono = localFont({
 	weight: '100 900',
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const pathname = usePathname();
 	const isWelcomePage = pathname === '/';
-	const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/forgot-password';
+	const isAuthPage =
+		pathname === '/login' ||
+		pathname === '/signup' ||
+		pathname === '/forgot-password' ||
+		pathname === '/reset-password';
 	const [isLoading, setIsLoading] = useState(true);
 
 	// Simuler un chargement asynchrone
@@ -38,38 +46,40 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	}, []);
 
 	return (
-		<html lang="en">
+		<html lang='en'>
 			<head>
-				<link rel="manifest" href="/manifest.json" />
-				<meta name="theme-color" content="#000000" />
-				<meta name="apple-mobile-web-app-capable" content="yes" />
-				<meta name="apple-mobile-web-app-status-bar-style" content="default" />
-				<meta name="apple-mobile-web-app-title" content="BingPhoto" />
-				<link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+				<link rel='manifest' href='/manifest.json' />
+				<meta name='theme-color' content='#000000' />
+				<meta name='apple-mobile-web-app-capable' content='yes' />
+				<meta name='apple-mobile-web-app-status-bar-style' content='default' />
+				<meta name='apple-mobile-web-app-title' content='BingPhoto' />
+				<link rel='apple-touch-icon' href='/icons/icon-192x192.png' />
 			</head>
-			<body className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}>
+			<body
+				className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}
+			>
 				<NoSSR>
 					{isLoading ? (
 						<Loader />
 					) : isWelcomePage ? (
 						<HomePage />
 					) : isAuthPage ? (
-						<div className="flex items-center justify-center h-screen bg-gray-100">
+						<div className='flex items-center justify-center h-screen bg-gray-100'>
 							{children}
 						</div>
 					) : (
-						<div className="flex h-screen">
+						<div className='flex h-screen'>
 							<Header
 								onDownload={() => console.log('Télécharger')}
-								placeholder="Rechercher..."
+								placeholder='Rechercher...'
 								selectedImages={[]}
-								onClose={() => { }}
+								onClose={() => {}}
 								onFavorite={() => console.log('Ajouter aux favoris')}
 								onDelete={() => console.log('Supprimer')}
 								onShare={() => console.log('Partager')}
 							/>
 							<Sidebar />
-							<main className="flex-1 flex justify-center p-6">{children}</main>
+							<main className='flex-1 flex justify-center p-6'>{children}</main>
 						</div>
 					)}
 				</NoSSR>

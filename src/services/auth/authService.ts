@@ -1,4 +1,3 @@
-import { AxiosInstance } from 'axios';
 import api, { setAuthToken } from '@/api/apiConfig';
 import { useAuthStore } from '@/store/authStore';
 
@@ -9,6 +8,10 @@ export interface LoginCredentials {
 
 export interface SignUpCredentials extends LoginCredentials {
   confirmPassword?: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
 }
 
 export interface AuthResponse {
@@ -68,9 +71,10 @@ const removeToken = (): void => {
   }
 };
 
+// Fonction pour effectuer la connexion
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
-    const response = await api.post('/login', credentials);
+    const response = await api.post('/auth/login', credentials);
     const data = response.data;
 
     const token = data?.token || data?.Token;
@@ -92,9 +96,10 @@ export interface RegisterResponse {
   Message: string;
 }
 
+// Fonction pour effectuer l'inscription
 export const signup = async (credentials: SignUpCredentials): Promise<RegisterResponse> => {
   try {
-    const response = await api.post('/register', credentials);
+    const response = await api.post('/auth/register', credentials);
     const data = response.data;
 
     if (!data || typeof data.Message !== 'string') {
@@ -109,6 +114,7 @@ export const signup = async (credentials: SignUpCredentials): Promise<RegisterRe
   }
 };
 
+// Fonction pour effectuer la déconnexion
 export const logout = async (): Promise<void> => {
   try {
     // await api.post('/logout');
@@ -120,13 +126,10 @@ export const logout = async (): Promise<void> => {
   }
 };
 
-export interface ForgotPasswordResponse {
-  message: string;
-}
-
+// Fonction pour un mot de passe oublié
 export const forgotPassword = async (email: string): Promise<ForgotPasswordResponse> => {
   try {
-    const response = await api.post('/forgot-password', { email });
+    const response = await api.post('/auth/forgot-password', { email });
     const data = response.data;
 
     if (!data || typeof data.message !== 'string') {
@@ -137,3 +140,20 @@ export const forgotPassword = async (email: string): Promise<ForgotPasswordRespo
     throw new Error(error.response?.data || 'Une erreur est survenue lors de la demande de réinitialisation');
   }
 };
+
+// Fonction pour effectuer la réinitialisation du mot de passe
+export const resetPassword = async (token: string, newPassword: string) => {
+  try {
+    const response = await api.post('/auth/reset-password', { token, newPassword });
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.status === 400) {
+      throw new Error('Token invalide ou expiré');
+    }
+    if (error.response?.status === 404) {
+      throw new Error('Utilisateur non trouvé');
+    }
+    throw new Error(error.response?.data?.message || 'Échec de la réinitialisation');
+  }
+};
+

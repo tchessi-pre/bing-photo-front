@@ -8,13 +8,15 @@ const protectedRoutes = [
   '/archive',
   '/trash',
   '/private',
-  '/share'
+  '/share',
+  '/profile'
 ];
 
 const publicRoutes = [
   '/login',
   '/signup',
   '/forgot-password',
+  '/reset-password',
   '/welcome'
 ];
 
