@@ -24,6 +24,8 @@ export type DateGroupProps = {
 export type Album = {
   id: number;
   title: string;
+  userId: number;
+  description?: string;
 };
 
 export type AlbumSelectProps = {

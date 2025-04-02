@@ -1,3 +1,8 @@
+'use client';
+
+import api from "@/api/apiConfig";
+import { useAlbumStore } from "@/store/albumStore";
+import { useAuthStore } from "@/store/authStore";
 
 
 export interface Album {
@@ -173,18 +178,46 @@ export const getAlbumById = (id: number): Album | undefined => {
  * @returns {Album} L'album ajouté
  */
 
-export const addAlbum = (
-  title: string,
-  images: { src: string; alt: string }[] = []
-): Album => {
-  const newAlbum: Album = {
-    id: albums.length > 0 ? Math.max(...albums.map((a) => a.id)) + 1 : 1,
-    title,
-    images,
-  };
-  albums.push(newAlbum);
-  return newAlbum;
+export interface Album {
+  id: number;
+  name: string;
+  user_id: number;
+  bucketName: string;
+  isPrivate: boolean;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  existsInS3?: boolean;
+}
+
+export const addAlbum = async (
+  name: string,
+  description?: string
+): Promise<Album> => {
+  try {
+    const user = useAuthStore.getState().user;
+    if (user===null||!user) throw new Error('User not authenticated');
+    console.log(typeof(user.id), 'user');
+    const response = await api.post('/albums', {
+      name,
+      user_id: user.id,
+      description,
+    });
+    const album: Album = response.data;
+
+    if (!album || typeof album !== 'object') {
+      throw new Error('Invalid response format');
+    }
+
+    useAlbumStore.getState().addAlbum(album); 
+
+    return album;
+  } catch (error) {
+    throw error;
+  }
 };
+
+
 
 /**
  * Supprime un album par son ID
