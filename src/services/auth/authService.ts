@@ -58,6 +58,12 @@ export const getToken = (): string | null => {
   return null;
 };
 
+// Ajoutez cette fonction
+export const clearToken = (): void => {
+  localStorage.removeItem('token');
+  // Ajoutez d'autres nettoyages si nécessaire (comme les refresh tokens)
+};
+
 // Stocke le token dans les cookies et localStorage
 const setToken = (token: string): void => {
   if (typeof window !== 'undefined') {
@@ -96,7 +102,7 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
     useAuthStore.getState().setAuth(
       {
         id: decoded.userID,
-        email: decoded.email||'',
+        email: decoded.email || '',
         name: decoded.username,
       },
       token
@@ -170,6 +176,28 @@ export const resetPassword = async (token: string, newPassword: string) => {
       throw new Error('Utilisateur non trouvé');
     }
     throw new Error(error.response?.data?.message || 'Échec de la réinitialisation');
+  }
+};
+
+
+export const decodeToken = (): { userID: number } | null => {
+  const token = getToken();
+  if (!token) return null;
+
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
   }
 };
 

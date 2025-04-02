@@ -10,9 +10,12 @@ import DropdownMenu from '../Sidebar/DropdownMenu';
 import LogoIcon from '@/assets/icons/logo.svg';
 import SelectedHeaderActions from './SelectedHeaderActions';
 import PinModal from '../private/PinModal';
+import { useMainAlbum } from '@/hooks/album/useMainAlbum';
+import { mainAlbumService } from '@/services/album/mainAlbumService';
+import { decodeToken, getToken } from '@/services/auth/authService';
 
 type HeaderProps = {
-	onDownload: () => void;
+	onDownload?: (file?: File) => void; // Modifié pour accepter un fichier optionnel
 	placeholder?: string;
 	selectedImages?: number[];
 	onClose?: () => void;
@@ -34,28 +37,68 @@ const Header: React.FC<HeaderProps> = ({
 	const hasSelectedImages = selectedImages.length > 0;
 	const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 	const router = useRouter();
+	const { uploadMedia, isLoading, error } = useMainAlbum();
+	const [albumId, setAlbumId] = useState<number | null>(null);
 
-	// Vérifiez si un code PIN existe déjà
-	const hasPin = localStorage.getItem('privatePin') !== null;
+	useEffect(() => {
+		const tokenData = decodeToken();
+		if (tokenData?.userID) {
+			mainAlbumService.getMainAlbumId(tokenData.userID)
+				.then(id => setAlbumId(id))
+				.catch(err => console.error('Error fetching main album:', err));
+		}
+	}, []);
 
-	// Gestion de la fermeture
+	// Vérifie si un code PIN existe déjà
+	const hasPin = typeof window !== 'undefined'
+		? localStorage.getItem('privatePin') !== null
+		: false;
+	
 	const handleClose = () => {
-		onClose && onClose();
+		onClose?.();
 	};
 
-	// Gestion de la soumission du code PIN
 	const handlePinSubmit = (pin: string) => {
 		console.log('Code PIN créé :', pin);
 		localStorage.setItem('privatePin', pin);
 		router.push('/private');
 	};
 
-	// Si l'utilisateur clique sur "Privé" et qu'un code PIN existe déjà, redirigez-le
 	const handlePrivateClick = () => {
 		if (hasPin) {
 			router.push('/private');
 		} else {
 			setIsPinModalOpen(true);
+		}
+	};
+
+	// Gestion améliorée du téléchargement
+	const handleFileSelected = async (file: File) => {
+		console.log('Fichier sélectionné:', file.name);
+		if (!albumId) {
+			console.error('Album ID non disponible. Veuillez réessayer dans quelques instants.');
+			return;
+		}
+		if (isLoading) {
+			console.error('Chargement en cours. Veuillez patienter...');
+			return;
+		}
+		try {
+			const uploadedMedia = await uploadMedia(albumId, file);
+			console.log('Media uploaded successfully:', uploadedMedia);
+			onDownload?.(file);
+		} catch (err) {
+			console.error('Échec du téléchargement:', err);
+		}
+	};
+
+	// Version alternative si vous voulez un vrai bouton de téléchargement
+	const handleDownloadClick = () => {
+		if (onDownload) {
+			onDownload(); // Pour téléchargement depuis une URL
+		} else {
+			// Ouvre le sélecteur de fichier via le DownloadButton
+			document.getElementById('file-input')?.click();
 		}
 	};
 
@@ -69,24 +112,31 @@ const Header: React.FC<HeaderProps> = ({
 					onFavorite={onFavorite}
 					onShare={onShare}
 					onPrivate={handlePrivateClick}
+					onDownload={handleDownloadClick} // Ajouté
 				/>
 			) : (
-				// Header par défaut
-				<div className="flex items-center">
-					<div className="flex items-center justify-normal">
-						<LogoIcon className="mt-2 cursor-pointer transform hover:rotate-45 transition-transform duration-300" />
+				<div className="flex items-center justify-between w-full">
+					<div className="flex items-center">
+						<LogoIcon
+							className="mt-2 mr-6 cursor-pointer transform hover:rotate-45 transition-transform duration-300"
+							onClick={() => router.push('/')}
+						/>
 						{!isMobile && <Logo />}
 					</div>
 
-					<div className={`flex items-center ${isMobile ? 'w-full justify-between' : ''}`}>
-						<DownloadButton onClick={onDownload} />
+					<div className={`flex items-center ${isMobile ? 'gap-2' : 'gap-4'}`}>
+						<DownloadButton
+							onFileSelected={handleFileSelected}
+							onClick={handleDownloadClick} // Nouvelle prop
+						/>
 						<SearchInput
 							placeholder={placeholder}
-							className={isMobile ? 'w-44 ml-10' : 'w-auto ml-10 mr-10'}
+							className={isMobile ? 'w-44' : 'w-64'}
 						/>
 					</div>
+
 					{isMobile && (
-						<div className="mt-2 w-full">
+						<div className="ml-2">
 							<DropdownMenu
 								navItems={[
 									{ name: 'Home', link: '/' },
@@ -99,7 +149,6 @@ const Header: React.FC<HeaderProps> = ({
 				</div>
 			)}
 
-			{/* Modale pour créer un code PIN */}
 			<PinModal
 				isOpen={isPinModalOpen}
 				onClose={() => setIsPinModalOpen(false)}

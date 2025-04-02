@@ -197,7 +197,6 @@ export const addAlbum = async (
   try {
     const user = useAuthStore.getState().user;
     if (user===null||!user) throw new Error('User not authenticated');
-    console.log(typeof(user.id), 'user');
     const response = await api.post('/albums', {
       name,
       user_id: user.id,
@@ -252,3 +251,5 @@ export const updateAlbum = (
   Object.assign(album, updates);
   return album;
 };
+
+

@@ -17,6 +17,7 @@ type SelectedHeaderActionsProps = {
   onDelete?: () => void;
   onShare?: () => void;
   onPrivate?: () => void;
+  onDownload?: () => void;
 };
 
 const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
