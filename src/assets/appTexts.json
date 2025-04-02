@@ -10,36 +10,37 @@
 		"logoAltText": "Retour à l'accueil"
 	},
 	"LoginPage": {
-    "title": "Connexion",
-    "description": "Entrez vos identifiants pour accéder à vos photos",
-    "emailLabel": "Email",
-    "emailPlaceholder": "Entrez votre email",
-    "passwordLabel": "Mot de passe",
-    "passwordPlaceholder": "Entrez votre mot de passe",
-    "loginButton": "Se connecter",
-    "forgotPasswordLink": "Mot de passe oublié ?",
-    "noAccountText": "Pas encore de compte ?",
-    "signupLink": "Inscrivez-vous",
-    "googleButton": "Se connecter avec Google"
-  },
-  "SignupPage": {
-    "title": "Inscription",
-    "description": "Entrez vos informations pour créer un compte",
-    "emailLabel": "Email",
-    "emailPlaceholder": "Entrez votre email",
+		"title": "Connexion",
+		"description": "Entrez vos identifiants pour accéder à vos photos",
+		"emailLabel": "Email",
+		"emailPlaceholder": "Entrez votre email",
+		"passwordLabel": "Mot de passe",
+		"passwordPlaceholder": "Entrez votre mot de passe",
+		"loginButton": "Se connecter",
+		"forgotPasswordLink": "Mot de passe oublié ?",
+		"noAccountText": "Pas encore de compte ?",
+		"signupLink": "Inscrivez-vous",
+		"googleButton": "Se connecter avec Google"
+	},
+	"SignupPage": {
+		"title": "Inscription",
+		"description": "Entrez vos informations pour créer un compte",
+		"emailLabel": "Email",
+		"emailPlaceholder": "Entrez votre email",
 		"usernameLabel": "Nom d'utilisateur",
 		"usernamePlaceholder": "Entrez votre nom d'utilisateur",
-    "passwordLabel": "Mot de passe",
-    "passwordPlaceholder": "Entrez votre mot de passe",
-    "confirmPasswordLabel": "Confirmer le mot de passe",
-    "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
-    "signupButton": "S'inscrire",
-    "alreadyAccountText": "Déjà un compte ?",
-    "loginLink": "Connectez-vous",
-    "googleButton": "S'inscrire avec Google"
-  },
+		"passwordLabel": "Mot de passe",
+		"passwordPlaceholder": "Entrez votre mot de passe",
+		"confirmPasswordLabel": "Confirmer le mot de passe",
+		"confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+		"signupButton": "S'inscrire",
+		"alreadyAccountText": "Déjà un compte ?",
+		"loginLink": "Connectez-vous",
+		"googleButton": "S'inscrire avec Google"
+	},
 	"ForgotPasswordPage": {
 		"title": "Mot de passe oublié",
+		"description": "Entrez votre adresse email ci-dessous et nous vous enverrons un lien sécurisé pour réinitialiser votre mot de passe. Le lien sera valide pendant 24 heures.",
 		"emailLabel": "Email",
 		"emailPlaceholder": "Entrez votre email",
 		"submitButton": "Envoyer le lien de réinitialisation",
@@ -156,5 +157,12 @@
 		"copyAlert": "Lien copié dans le presse-papiers !",
 		"shareLinkLabel": "Lien de partage :",
 		"closeButton": "Fermer"
-	}
+	},
+	"SuccessPage": {
+		"defaultTitle": "Succès !",
+		"defaultMessage": "Votre demande a été traitée avec succès. Vous recevrez un email avec les instructions supplémentaires.",
+		"defaultButtonText": "Retour à la connexion",
+		"contactText": "Si vous n'avez pas reçu d'email, contactez-nous à"
+	},
+	"contactEmail": "support@bingphoto.com"
 }
