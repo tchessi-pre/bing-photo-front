@@ -13,25 +13,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus } from 'lucide-react';
 import appTexts from '@/assets/appTexts.json';
+import { useAlbum } from '@/hooks/album/useAlbum';
 
-type AlbumCreateDialogProps = {
-	onCreateAlbum: (albumName: string) => void;
-};
-
-const AlbumCreateDialog: React.FC<AlbumCreateDialogProps> = ({
-	onCreateAlbum,
-}) => {
+const AlbumCreateDialog = () => {
 	const [albumName, setAlbumName] = useState('');
+	const [description, setDescription] = useState('');
+	const { createAlbum, isLoading, error } = useAlbum();
 
 	const texts = appTexts.albumPage.albumCreateDialog;
 
-	const handleCreate = () => {
+	const handleCreate = async () => {
 		if (albumName.trim() === '') {
 			alert(texts.emptyTitleAlert);
 			return;
 		}
-		onCreateAlbum(albumName);
-		setAlbumName('');
+		try {
+			await createAlbum(albumName, description);
+			setAlbumName('');
+			setDescription('');
+		} catch (err) {
+			console.error('Erreur création album', err);
+			alert('Erreur lors de la création de l\'album.');
+		}
 	};
 
 	return (
@@ -48,10 +51,7 @@ const AlbumCreateDialog: React.FC<AlbumCreateDialogProps> = ({
 				</DialogHeader>
 				<div className='space-y-4'>
 					<div>
-						<Label
-							htmlFor='albumName'
-							className='block text-sm font-medium text-gray-700'
-						>
+						<Label htmlFor='albumName' className='block text-sm font-medium text-gray-700'>
 							{texts.albumTitleLabel}
 						</Label>
 						<Input
@@ -62,12 +62,26 @@ const AlbumCreateDialog: React.FC<AlbumCreateDialogProps> = ({
 							className='mt-2 w-full'
 						/>
 					</div>
+					<div>
+						<Label htmlFor='albumDescription' className='block text-sm font-medium text-gray-700'>
+							{texts.albumDescriptionLabel || 'Description'}
+						</Label>
+						<Input
+							id='albumDescription'
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+							placeholder={texts.albumDescriptionPlaceholder || 'Une petite description ?'}
+							className='mt-2 w-full'
+						/>
+					</div>
 					<Button
 						onClick={handleCreate}
+						disabled={isLoading}
 						className='w-full bg-green-900 text-white hover:bg-green-800 transition-colors'
 					>
-						{texts.createButton}
+						{isLoading ? texts.loadingLabel || 'Création...' : texts.createButton}
 					</Button>
+					{error && <p className='text-red-500 text-sm'>{error}</p>}
 				</div>
 			</DialogContent>
 		</Dialog>

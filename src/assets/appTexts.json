@@ -86,7 +86,10 @@
 			"albumTitleLabel": "Titre de l'album",
 			"albumTitlePlaceholder": "Entrez le titre pour l'album",
 			"emptyTitleAlert": "Veuillez entrer un nom pour l'album.",
-			"createButton": "Créer"
+			"createButton": "Créer",
+			"albumDescriptionLabel":" Description de l'album",
+			"albumDescriptionPlaceholder":" Entrez la description de l'album",
+			"loadingLabel": "Création de l'album..."
 		}
 	},
 	"overviewPage": {

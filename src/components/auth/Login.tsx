@@ -32,6 +32,7 @@ const Login: React.FC = () => {
 	}, [isAuthenticated, router]);
 
 	const handleSubmit = async (formData: { email: string; password: string }) => {
+		
 		try {
 			const response = await login(formData);
 			await setAuth(response.user, response.token);

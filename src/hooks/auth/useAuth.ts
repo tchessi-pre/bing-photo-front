@@ -8,6 +8,14 @@ import {
   SignUpCredentials,
 } from '@/services/auth/authService';
 import { useAuthStore } from '@/store/authStore';
+import { jwtDecode } from 'jwt-decode';
+interface DecodedToken {
+  userID: string;
+  username?: string;
+  email?: string;
+  exp?: number;
+  iat?: number;
+}
 
 export const useAuth = () => {
   const router = useRouter();
@@ -22,8 +30,16 @@ export const useAuth = () => {
       setError(null);
       try {
         const response = await authLogin(credentials);
-        setAuth(response.user, response.token);
-        router.push('/overview');
+       
+        const decoded = jwtDecode<DecodedToken>(response.Token);
+        
+        const user = {
+          id: decoded.userID,
+          email: decoded.email || '', // par sécurité
+          name: decoded.username,
+        };
+        
+        setAuth(user, response.Token);
         return response;
       } catch (err: any) {
         setError(err.response?.data?.message || 'Login failed');
