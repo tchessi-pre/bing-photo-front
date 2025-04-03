@@ -1,51 +1,42 @@
+import api from "@/api/apiConfig";
+import { useAlbumStore } from "@/store/albumStore";
+import { useAuthStore } from "@/store/authStore";
+import { Album } from "@/types/types";
+
 export interface Image {
   src: string;
   alt: string;
 }
 
-export interface Album {
-  id: number;
-  title: string;
-  images: Image[];
-}
+// Récupère les albums de l'utilisateur depuis l'API
+export const getAlbums = async (): Promise<Album[]> => {
+  try {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error('User not authenticated');
 
-// Données fictives pour les albums
-const albums: Album[] = [
-  {
-    id: 1,
-    title: 'Vacances à la plage',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-    ],
-  },
-  {
-    id: 2,
-    title: 'Au Makéda',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-    ],
-  },
-  {
-    id: 3,
-    title: 'Anniversaire',
-    images: [],
-  },
-];
+    const response = await api.get(`/albums/user`, {
+      params: { user_id: user.id },
+    });
+
+    const albums: Album[] = response.data.albums;
+
+    if (!Array.isArray(albums)) {
+      throw new Error('Invalid response format: albums must be an array');
+    }
+
+    // Mets à jour le store global
+    useAlbumStore.getState().setAlbums(albums);
+
+    return albums;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des albums:', error);
+    throw error;
+  }
+};
 
 // Fonction pour récupérer un album par ID
 export const getAlbumById = (id: number): Album | undefined => {
+  const albums = useAlbumStore.getState().albums;
   return albums.find((album) => album.id === id);
 };
 

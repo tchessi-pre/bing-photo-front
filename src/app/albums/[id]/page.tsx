@@ -9,6 +9,7 @@ import appTexts from '@/assets/appTexts.json';
 import {
   getAlbumById,
   toggleImageSelection,
+  getAlbums,
 } from '@/services/album/albumDetailService';
 
 import { PageHeader } from '@/components/Album';
@@ -20,7 +21,7 @@ const AlbumDetailPage: React.FC = () => {
   const params = useParams();
   const albumId = parseInt(params?.id as string, 10);
 
-  const album = getAlbumById(albumId); // Pour les infos de base : titre, etc.
+  const [album, setAlbum] = useState<any | null>(null);
   const [images, setImages] = useState<{ src: string; alt: string }[]>([]);
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [scanning, setScanning] = useState(false);
@@ -28,26 +29,28 @@ const AlbumDetailPage: React.FC = () => {
 
   // 🔁 Récupère les images depuis le backend au montage
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchData = async () => {
       try {
+        await getAlbums(); // charge les albums dans le store
+        const currentAlbum = getAlbumById(albumId);
+        setAlbum(currentAlbum);
+
         const response = await mediaService.getAlbumMedia(albumId);
-        console.log('response: >>>>>', response);
-        // Assure-toi que les médias sont bien au format [{ src, alt }]
         const formattedImages = Array.isArray(response.media)
           ? response.media.map((media: any) => ({
-            src: media.url,
-            alt: media.name || 'image',
-          }))
+              src: `http://localhost:9090/${media.path}`,
+              alt: media.name || 'image',
+            }))
           : [];
         setImages(formattedImages);
       } catch (err) {
-        console.error('Erreur chargement des images :', err);
+        console.error('Erreur chargement de l’album ou des images :', err);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchImages();
+    fetchData();
   }, [albumId]);
 
   const handleImageSelect = (index: number) => {
@@ -84,11 +87,8 @@ const AlbumDetailPage: React.FC = () => {
       }
     });
     setSelectedImages(newSelection);
-
     setScanning(true);
-    setTimeout(() => {
-      setScanning(false);
-    }, 3000);
+    setTimeout(() => setScanning(false), 3000);
   };
 
   if (!album) {
@@ -105,8 +105,8 @@ const AlbumDetailPage: React.FC = () => {
         onSelectSimilarImages={handleSelectSimilarImages}
         imageCount={images.length}
         selectedImageCount={selectedImages.size}
-        onAction={() => { }}
-        onImport={() => { }}
+        onAction={() => {}}
+        onImport={() => {}}
       />
 
       <div className="mt-4 ml-10 mr-10">
