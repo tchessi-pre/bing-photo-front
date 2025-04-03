@@ -24,6 +24,10 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
+  const isPlaceholder = (src: string) => {
+    return src === '/images/placeholder.png';
+  };
+
   // Sélection d'images
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
@@ -112,6 +116,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
               {group.photos.map((photo, photoIndex) => {
                 const isSelected = selectedImages.has(photo.id);
                 const isFavorite = favoriteImages.has(photo.id);
+                const placeholder = isPlaceholder(photo.src);
 
                 return (
                   <motion.div
@@ -129,21 +134,28 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                     <motion.img
                       src={photo.src}
                       alt={photo.alt || texts.defaultPhotoAlt}
-                      className={`w-full h-48 object-cover transition-all duration-500 ${isSelected ? 'filter grayscale opacity-50' : ''
-                        }`}
+                      className={`w-full h-48 object-contain transition-all duration-500 ${isSelected ? 'filter grayscale opacity-50' : ''}`}
                       whileHover={{ scale: 1.05 }}
-                    />
-                    <motion.div
-                      className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-2 transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 cursor-pointer'
-                        }`}
-                      whileHover={{ scale: 1.1 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleImageSelect(photo.id);
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/images/placeholder.png';
+                        target.onerror = null;
                       }}
-                    >
-                      <CircleCheckBig className="w-5 h-5" />
-                    </motion.div>
+                    />
+
+                    {!placeholder && (
+                      <motion.div
+                        className={`absolute top-2 right-2 text-white bg-green-700/50 rounded-full p-2 transition-opacity duration-300 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 cursor-pointer'
+                          }`}
+                        whileHover={{ scale: 1.1 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleImageSelect(photo.id);
+                        }}
+                      >
+                        <CircleCheckBig className="w-5 h-5" />
+                      </motion.div>
+                    )}
 
                     {isFavorite && (
                       <motion.div
@@ -160,16 +172,18 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
                       </motion.div>
                     )}
 
-                    <motion.div
-                      className="absolute bottom-2 right-2 text-white bg-gray-700/50 p-2 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100 cursor-pointer"
-                      whileHover={{ scale: 1.1 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setZoomedImageIndex(groupIndex * 100 + photoIndex);
-                      }}
-                    >
-                      <ZoomIn className="w-5 h-5" />
-                    </motion.div>
+                    {!placeholder && (
+                      <motion.div
+                        className="absolute bottom-2 right-2 text-white bg-gray-700/50 p-2 rounded-full transition-opacity duration-300 opacity-0 group-hover:opacity-100 cursor-pointer"
+                        whileHover={{ scale: 1.1 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setZoomedImageIndex(groupIndex * 100 + photoIndex);
+                        }}
+                      >
+                        <ZoomIn className="w-5 h-5" />
+                      </motion.div>
+                    )}
                   </motion.div>
                 );
               })}
@@ -188,7 +202,6 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
             onClose={handleCloseModal}
             onDelete={(index) => {
               console.log(`${texts.consoleDeleteImageAtIndex} ${index}`);
-              // Mettez à jour la liste de photos si nécessaire
             }}
             onAddToAlbum={(index) => {
               console.log(`${texts.consoleAddToAlbumAtIndex} ${index}`);

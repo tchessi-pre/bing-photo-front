@@ -13,6 +13,7 @@ import PinModal from '../private/PinModal';
 import { useMainAlbum } from '@/hooks/album/useMainAlbum';
 import { mainAlbumService } from '@/services/album/mainAlbumService';
 import { decodeToken, getToken } from '@/services/auth/authService';
+import toast from 'react-hot-toast';
 
 type HeaderProps = {
 	onDownload?: (file?: File) => void; // Modifié pour accepter un fichier optionnel
@@ -53,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
 	const hasPin = typeof window !== 'undefined'
 		? localStorage.getItem('privatePin') !== null
 		: false;
-	
+
 	const handleClose = () => {
 		onClose?.();
 	};
@@ -74,21 +75,21 @@ const Header: React.FC<HeaderProps> = ({
 
 	// Gestion améliorée du téléchargement
 	const handleFileSelected = async (file: File) => {
-		console.log('Fichier sélectionné:', file.name);
+		const loadingToast = toast.loading(`Téléchargement de ${file.name}...`);
 		if (!albumId) {
-			console.error('Album ID non disponible. Veuillez réessayer dans quelques instants.');
+			toast.error('Album non disponible. Veuillez réessayer.', { id: loadingToast });
 			return;
 		}
 		if (isLoading) {
-			console.error('Chargement en cours. Veuillez patienter...');
+			toast.error('Un téléchargement est déjà en cours.', { id: loadingToast });
 			return;
 		}
 		try {
 			const uploadedMedia = await uploadMedia(albumId, file);
-			console.log('Media uploaded successfully:', uploadedMedia);
+			toast.success('Fichier téléchargé avec succès !', { id: loadingToast });
 			onDownload?.(file);
 		} catch (err) {
-			console.error('Échec du téléchargement:', err);
+			toast.error('Échec du téléchargement. Veuillez réessayer.', { id: loadingToast });
 		}
 	};
 

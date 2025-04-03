@@ -40,14 +40,25 @@ export interface UserProfile {
   username: string;
   email: string;
   profileImage?: string;
-  createdAt: string;
+  private_album_pin?: string;
+  private_album_id?: number;
+  main_album_id?: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Media {
   id: number;
-  url: string;
+  name: string;
+  path: string;
+  type: string;
   album_id: number;
-
+  is_favorite: boolean;
+  is_private: boolean;
+  hash: string;
+  file_size: number;
+  created_at: string;
+  updated_at: string;
 }
 
 // types.ts
@@ -59,17 +70,8 @@ export interface Media {
 //   created_at?: string;
 //   updated_at?: string;
 // }
-
-export interface Media {
-  id: number;
-  album_id: number;
-  path: string;
-  name: string;
-  type: string;
-  is_favorite: boolean;
-  is_private: boolean;
-  hash: string;
-  file_size: number;
-  created_at: string;
-  updated_at: string;
-}
+// hash: string;
+// file_size: number;
+// created_at: string;
+// updated_at: string;
+// }

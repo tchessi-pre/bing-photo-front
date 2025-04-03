@@ -9,6 +9,7 @@ import './globals.css';
 import { usePathname } from 'next/navigation';
 import HomePage from './page';
 import Loader from '@/components/Loader/Loader';
+import { Toaster } from 'react-hot-toast';
 
 // Importation des polices locales
 const robotoSans = localFont({
@@ -68,12 +69,19 @@ export default function RootLayout({
 							{children}
 						</div>
 					) : (
-						<div className='flex h-screen'>
+									<div className='flex h-screen'>
+										<Toaster position="top-center" toastOptions={{
+											duration: 3000,
+											style: {
+												background: '#333',
+												color: '#fff'
+											},
+										}} />
 							<Header
 								onDownload={() => console.log('Télécharger')}
 								placeholder='Rechercher...'
 								selectedImages={[]}
-								onClose={() => {}}
+								onClose={() => { }}
 								onFavorite={() => console.log('Ajouter aux favoris')}
 								onDelete={() => console.log('Supprimer')}
 								onShare={() => console.log('Partager')}
