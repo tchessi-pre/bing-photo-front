@@ -21,6 +21,7 @@ export const mediaService = {
   async getAlbumMedia(albumId: number): Promise<MediaResponse> {
     try {
       const response = await api.get(`/media/album/${albumId}`);
+      console.log('response: >>>>>', response);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des médias:', error);

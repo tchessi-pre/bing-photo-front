@@ -48,11 +48,11 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   const isAlbumDetailPage = pathname?.startsWith('/albums/');
 
   return (
-    <div className="sticky top-14 z-40 flex w-[90vw] items-center justify-between p-6 bg-gray-100 shadow-md ml-10 border border-gray-200 mt-14 ">
-      <div className="flex items-center gap-4">
-        <h1 className="text-xl font-bold text-gray-800">{title}</h1>
+    <div className="sticky top-14 z-40 flex flex-col md:flex-row w-full md:w-[90vw] items-start md:items-center justify-between md:p-6 bg-gray-100 shadow-md mx-2 md:ml-10 border border-gray-200 mt-14 space-y-4 md:space-y-0">
+      <div className="flex flex-wrap items-center gap-2 md:gap-4">
+        <h1 className="text-lg md:text-xl font-bold text-gray-800">{title}</h1>
         {albumCount !== undefined && (
-          <span className="text-sm font-medium text-primary bg-gray-200 px-3 py-1 rounded-full">
+          <span className="text-xs md:text-sm font-medium text-primary bg-gray-200 px-2 md:px-3 py-1 rounded-full">
             {albumCount} album{albumCount > 1 ? 's' : ''}
           </span>
         )}
@@ -63,9 +63,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             animate={{ scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-          <span className="text-sm font-medium text-primary bg-gray-200 px-3 py-1 rounded-full">
-            {imageCount} photo{imageCount > 1 ? 's' : ''}
-          </span>
+            <span className="text-xs md:text-sm font-medium text-primary bg-gray-200 px-2 md:px-3 py-1 rounded-full">
+              {imageCount} photo{imageCount > 1 ? 's' : ''}
+            </span>
           </motion.div>
         )}
         {selectedImageCount !== undefined && selectedImageCount > 0 && (
@@ -75,14 +75,13 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             animate={{ scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-          <span className="text-sm font-medium text-primary bg-green-200 px-3 py-1 rounded-full">
-            {selectedImageCount} sélectionnée{selectedImageCount > 1 ? 's' : ''}
-          </span>
+            <span className="text-xs md:text-sm font-medium text-primary bg-green-200 px-2 md:px-3 py-1 rounded-full">
+              {selectedImageCount} sélectionnée{selectedImageCount > 1 ? 's' : ''}
+            </span>
           </motion.div>
         )}
       </div>
-      <div className="flex items-center gap-4">
-        {/* Bouton de suppression */}
+      <div className="flex flex-wrap items-center gap-2 md:gap-4">
         {selectedImageCount !== undefined && selectedImageCount > 0 && (
           <motion.div
             className="rounded-full cursor-pointer"
@@ -90,36 +89,34 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             animate={{ scale: 1 }}
             transition={{ duration: 0.3 }}
           >
-          <TooltipCustom message="Supprime les images" position="bottom">
-            <Button
-              onClick={handleDeleteClick}
-              className="flex items-center gap-2 px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
-            >
-              <DeleteIcon style={{ width: '25px', height: '25px' }} />
-            </Button>
+            <TooltipCustom message="Supprime les images" position="bottom">
+              <Button
+                onClick={handleDeleteClick}
+                className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+              >
+                <DeleteIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
             </TooltipCustom>
           </motion.div>
         )}
 
-        {/* Bouton pour sélectionner les images similaires */}
         {isAlbumDetailPage && (
           <TooltipCustom message="Sélectionner similaires" position="bottom">
             <Button
               onClick={onSelectSimilarImages}
-              className="flex items-center gap-2 px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+              className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
             >
-              <KillerFeatureIcon style={{ width: '25px', height: '25px' }} />
+              <KillerFeatureIcon style={{ width: '20px', height: '20px' }} />
             </Button>
           </TooltipCustom>
         )}
 
-        {/* Champ d'importation de fichiers */}
         <TooltipCustom message="Importer des images" position="bottom">
           <label
             htmlFor="file-input"
-            className="flex items-center gap-2 px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+            className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
           >
-            <CloudDownload className="w-5 h-5" />
+            <CloudDownload className="w-4 h-4 md:w-5 md:h-5" />
             Importer
           </label>
         </TooltipCustom>

@@ -38,17 +38,6 @@ const Header: React.FC<HeaderProps> = ({
 	const hasSelectedImages = selectedImages.length > 0;
 	const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 	const router = useRouter();
-	const { uploadMedia, isLoading, error } = useMainAlbum();
-	const [albumId, setAlbumId] = useState<number | null>(null);
-
-	useEffect(() => {
-		const tokenData = decodeToken();
-		if (tokenData?.userID) {
-			mainAlbumService.getMainAlbumId(tokenData.userID)
-				.then(id => setAlbumId(id))
-				.catch(err => console.error('Error fetching main album:', err));
-		}
-	}, []);
 
 	// Vérifie si un code PIN existe déjà
 	const hasPin = typeof window !== 'undefined'
@@ -73,24 +62,8 @@ const Header: React.FC<HeaderProps> = ({
 		}
 	};
 
-	// Gestion améliorée du téléchargement
-	const handleFileSelected = async (file: File) => {
-		const loadingToast = toast.loading(`Téléchargement de ${file.name}...`);
-		if (!albumId) {
-			toast.error('Album non disponible. Veuillez réessayer.', { id: loadingToast });
-			return;
-		}
-		if (isLoading) {
-			toast.error('Un téléchargement est déjà en cours.', { id: loadingToast });
-			return;
-		}
-		try {
-			const uploadedMedia = await uploadMedia(albumId, file);
-			toast.success('Fichier téléchargé avec succès !', { id: loadingToast });
-			onDownload?.(file);
-		} catch (err) {
-			toast.error('Échec du téléchargement. Veuillez réessayer.', { id: loadingToast });
-		}
+	const handleFileSelected = (file: File) => {
+		onDownload?.(file);
 	};
 
 	// Version alternative si vous voulez un vrai bouton de téléchargement

@@ -1,25 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import DownloadIcon from '@/assets/icons/download.svg';
 import appTexts from '@/assets/appTexts.json';
+import { useMainAlbum } from '@/hooks/album/useMainAlbum';
+import { mainAlbumService } from '@/services/album/mainAlbumService';
+import { decodeToken } from '@/services/auth/authService';
+import toast from 'react-hot-toast';
 
 type DownloadButtonProps = {
 	onFileSelected: (file: File) => void;
 	onClick?: () => void;
 };
 
-const DownloadButton: React.FC<DownloadButtonProps> = ({ onFileSelected }) => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({
+	onFileSelected,
+	onClick,
+}) => {
 	const texts = appTexts.header;
 	const fileInputRef = React.useRef<HTMLInputElement>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const { uploadMedia } = useMainAlbum();
+	const [albumId, setAlbumId] = useState<number | null>(null);
+
+	useEffect(() => {
+		const tokenData = decodeToken();
+		if (tokenData?.userID) {
+			mainAlbumService
+				.getMainAlbumId(tokenData.userID)
+				.then((id) => setAlbumId(id))
+				.catch((err) => console.error('Error fetching main album:', err));
+		}
+	}, []);
 
 	const handleClick = () => {
 		fileInputRef.current?.click();
+		if (onClick) {
+			onClick();
+		}
 	};
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file) {
-			onFileSelected(file);
+		if (!file) return;
+
+		if (!albumId) {
+			toast.error('Album not available. Please try again.');
+			return;
+		}
+
+		if (isLoading) {
+			toast.error('An upload is already in progress.');
+			return;
+		}
+
+		const loadingToast = toast.loading(`Uploading ${file.name}...`);
+		setIsLoading(true);
+
+		try {
+			await uploadMedia(albumId, file);
+			toast.success('File uploaded successfully!', { id: loadingToast });
+			if (onFileSelected) {
+				await onFileSelected(file);
+			}
+		} catch (err) {
+			console.error('File upload error:', err);
+			toast.error('Upload failed. Please try again.', { id: loadingToast });
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -36,7 +83,8 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ onFileSelected }) => {
 			{/* Input file caché */}
 			<input
 				ref={fileInputRef}
-				type="file"
+				type='file'
+				accept='image/*'
 				onChange={handleFileChange}
 				className='hidden'
 			/>

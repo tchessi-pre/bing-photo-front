@@ -38,7 +38,7 @@ const ProfilePage = () => {
 			username={profile.username}
 			email={profile.email}
 			profileImage={profile.profileImage}
-			joinedDate={profile.joinedDate}
+			// joinedDate={profile.joinedDate}
 		/>
 	);
 };

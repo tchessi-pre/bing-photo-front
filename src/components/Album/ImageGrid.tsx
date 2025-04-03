@@ -140,7 +140,9 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 			)}
 
 			<motion.div
-				className='grid w-full grid-cols-4 gap-4 auto-rows-[150px] md:auto-rows-[200px]'
+				className='grid w-full gap-2 sm:gap-3 md:gap-4
+					grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+					auto-rows-[200px] sm:auto-rows-[180px] md:auto-rows-[200px]'
 				style={{ gridAutoFlow: 'dense' }}
 				initial='hidden'
 				animate='visible'
@@ -218,7 +220,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({
 
 							{/* Overlay sombre (optionnel) */}
 							<div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-gray-800 via-transparent to-transparent opacity-50' />
-							
+
 							{/* Icône sélection en haut à droite */}
 							<motion.div
 								className={`

@@ -120,7 +120,7 @@ const FavoritePhotosGrid: React.FC = () => {
         onCreateAlbum={(albumName: string) => console.log(`Créer l'album : ${albumName}`)}
         onAction={() => console.log('Action déclenchée')}
       />
-      <div className="mt-4 ml-10 mr-10">
+      <div className="mt-8 md:ml-8 md:mr-8">
         {images.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }} 

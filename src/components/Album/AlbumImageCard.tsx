@@ -48,7 +48,7 @@ const AlbumImageCard: React.FC = () => {
         onAction={() => console.log('Action réalisée')}
         albumCount={albums.length}
       />
-      <div className="flex flex-wrap justify-center gap-4 mt-4">
+      <div className="flex flex-wrap justify-center gap-4 mt-4 md:ml-8 md:mr-8">
         {albums.length === 0 ? (
           <EmptyPage
             title={texts.emptyPageTitle}
