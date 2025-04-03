@@ -6,22 +6,28 @@ import { useRouter } from 'next/navigation';
 import appTexts from '@/assets/appTexts.json';
 import { AlbumCarousel } from '@/components/overview';
 import PhotoGallery from '@/components/overview/PhotoGallery';
-import { mediaService, MediaResponse, Media } from '@/services/album/mediaService';
+import {
+	mediaService,
+	MediaResponse,
+	Media,
+} from '@/services/album/mediaService';
 import { useMainAlbum } from '@/hooks/album/useMainAlbum';
 import { decodeToken } from '@/services/auth/authService';
 
 const OverviewPage: React.FC = () => {
 	const tokenData = decodeToken();
 	const userId = tokenData?.userID;
-	
+
 	const { fetchMainAlbumId } = useMainAlbum();
 	const router = useRouter();
 	const texts = appTexts.overviewPage;
 
 	const [albums] = useState(() => getAlbums());
 	const [mainAlbumId, setMainAlbumId] = useState<number | null>(null);
-	
-	const [photos, setPhotos] = useState<Array<{ id: number; src: string; date: string; alt: string }>>([]);
+
+	const [photos, setPhotos] = useState<
+		Array<{ id: number; src: string; date: string; alt: string }>
+	>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -36,12 +42,14 @@ const OverviewPage: React.FC = () => {
 			}
 
 			const formattedPhotos = response.media
-				.filter((media): media is Media => media !== null && typeof media === 'object')
-				.map(media => ({
+				.filter(
+					(media): media is Media => media !== null && typeof media === 'object'
+				)
+				.map((media) => ({
 					id: media.id || Date.now(),
 					src: `${process.env.NEXT_PUBLIC_S3}/${media.path}` || '',
 					date: media.createdAt || new Date().toISOString(),
-					alt: media.name || 'Photo'
+					alt: media.name || 'Photo',
 				}));
 
 			setPhotos(formattedPhotos);
@@ -104,14 +112,18 @@ const OverviewPage: React.FC = () => {
 	};
 
 	return (
-		<div className="mt-8 md:ml-8 md:mr-8">
+		<div className='mt-8 md:ml-8 md:mr-8'>
 			<div className='w-full'>
-				<AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} />
+				<AlbumCarousel
+					title={texts.title}
+					images={carouselImages}
+					onImageClick={handleImageClick}
+				/>
 			</div>
 			<div>
-				{error && <div className="text-red-500 text-center my-4">{error}</div>}
+				{error && <div className='text-red-500 text-center my-4'>{error}</div>}
 				{isLoading ? (
-					<div className="text-center my-4">Loading photos...</div>
+					<div className='text-center my-4'>Loading photos...</div>
 				) : (
 					<PhotoGallery photos={photos} />
 				)}
