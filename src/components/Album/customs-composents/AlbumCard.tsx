@@ -27,7 +27,7 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ id, images, title }) => {
   };
 
   // Récupérer 4 images aléatoires
-  const randomImages = getRandomItems(images, 4);
+  const randomImages = getRandomItems(images ?? [], 4);
 
   return (
     <div className="p-4">

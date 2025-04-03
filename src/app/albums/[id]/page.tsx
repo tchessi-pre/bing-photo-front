@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import ImageGrid from '@/components/Album/ImageGrid';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
@@ -13,24 +13,48 @@ import {
 
 import { PageHeader } from '@/components/Album';
 import { EmptyPage } from '@/components/customs';
+import { mediaService } from '@/services/album/mediaService';
 
 const AlbumDetailPage: React.FC = () => {
   const texts = appTexts.AlbumDetailPage;
   const params = useParams();
   const albumId = parseInt(params?.id as string, 10);
 
-  const album = getAlbumById(albumId);
+  const album = getAlbumById(albumId); // Pour les infos de base : titre, etc.
+  const [images, setImages] = useState<{ src: string; alt: string }[]>([]);
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
-  const [images, setImages] = useState(album ? album.images : []);
-
   const [scanning, setScanning] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 🔁 Récupère les images depuis le backend au montage
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await mediaService.getAlbumMedia(albumId);
+        console.log('response: >>>>>', response);
+        // Assure-toi que les médias sont bien au format [{ src, alt }]
+        const formattedImages = Array.isArray(response.media)
+          ? response.media.map((media: any) => ({
+            src: media.url,
+            alt: media.name || 'image',
+          }))
+          : [];
+        setImages(formattedImages);
+      } catch (err) {
+        console.error('Erreur chargement des images :', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchImages();
+  }, [albumId]);
 
   const handleImageSelect = (index: number) => {
     const updatedSelection = toggleImageSelection(selectedImages, index);
     setSelectedImages(updatedSelection);
   };
 
-  // Importation de fichiers
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
@@ -45,7 +69,6 @@ const AlbumDetailPage: React.FC = () => {
     }
   };
 
-  // Suppression
   const handleDeleteSelectedImages = () => {
     setImages((prevImages) =>
       prevImages.filter((_, index) => !selectedImages.has(index))
@@ -53,10 +76,7 @@ const AlbumDetailPage: React.FC = () => {
     setSelectedImages(new Set());
   };
 
-  // Sélection d'images similaires (ex: si "alt" contient "similar")
   const handleSelectSimilarImages = () => {
-    console.log('Sélection d’images similaires...');
-    // Logique de sélection
     const newSelection = new Set<number>();
     images.forEach((image, index) => {
       if (image.alt.includes('similar')) {
@@ -65,24 +85,14 @@ const AlbumDetailPage: React.FC = () => {
     });
     setSelectedImages(newSelection);
 
-    // On déclenche l’effet “scan”
     setScanning(true);
     setTimeout(() => {
       setScanning(false);
-      console.log('Recherche terminée (fin du scan) !');
     }, 3000);
   };
 
   if (!album) {
     return <div className="p-4">{texts.albumNotFound}</div>;
-  }
-
-  function handleCreateAlbum(): void {
-    throw new Error('Function not implemented.');
-  }
-
-  function handleImport(): void {
-    throw new Error('Function not implemented.');
   }
 
   return (
@@ -95,12 +105,14 @@ const AlbumDetailPage: React.FC = () => {
         onSelectSimilarImages={handleSelectSimilarImages}
         imageCount={images.length}
         selectedImageCount={selectedImages.size}
-        onAction={handleCreateAlbum}
-        onImport={handleImport}
+        onAction={() => { }}
+        onImport={() => { }}
       />
 
       <div className="mt-4 ml-10 mr-10">
-        {images.length === 0 ? (
+        {isLoading ? (
+          <p>Chargement des images...</p>
+        ) : images.length === 0 ? (
           <EmptyPage
             title={texts.emptyAlbumTitle}
             message={texts.emptyAlbumMessage}
@@ -109,7 +121,6 @@ const AlbumDetailPage: React.FC = () => {
             onFileChange={handleFileChange}
           />
         ) : (
-        
           <ImageGrid
             images={images}
             selectedImages={selectedImages}
