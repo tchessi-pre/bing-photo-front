@@ -6,6 +6,7 @@ import { useMainAlbum } from '@/hooks/album/useMainAlbum';
 import { mainAlbumService } from '@/services/album/mainAlbumService';
 import { decodeToken } from '@/services/auth/authService';
 import toast from 'react-hot-toast';
+import Loader from '@/components/Loader/Loader';
 
 type DownloadButtonProps = {
 	onFileSelected: (file: File) => void;
@@ -62,6 +63,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
 			if (onFileSelected) {
 				await onFileSelected(file);
 			}
+			window.location.reload();
 		} catch (err) {
 			console.error('File upload error:', err);
 			toast.error('Upload failed. Please try again.', { id: loadingToast });
@@ -72,10 +74,12 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
 
 	return (
 		<div className='relative flex items-center group'>
+			{isLoading && <Loader />}
 			<Button
 				variant='secondary'
 				onClick={handleClick}
 				className='flex items-center gap-2 rounded hover:bg-gray-300'
+				disabled={isLoading}
 			>
 				<DownloadIcon style={{ width: '30px', height: '25px' }} />
 			</Button>
