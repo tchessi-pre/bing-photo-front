@@ -58,17 +58,40 @@ const AlbumDetailPage: React.FC = () => {
     setSelectedImages(updatedSelection);
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const newImage = { src: reader.result as string, alt: file.name };
-          setImages((prevImages) => [...prevImages, newImage]);
-        };
-        reader.readAsDataURL(file);
-      });
+      for (const file of Array.from(files)) {
+        const previewSrc = URL.createObjectURL(file);
+  
+        // 1. Affiche l’image immédiatement en local
+        const tempImage = { src: previewSrc, alt: file.name };
+        setImages((prev) => [...prev, tempImage]);
+  
+        try {
+          // 2. Envoie au backend
+          const media = await mediaService.importToAlbum(albumId, file);
+  
+          // 3. Si le backend répond bien, on remplace l’image locale par la vraie
+          if (media && media.path) {
+            const realImage = {
+              src: `http://localhost:9090/${media.path}`,
+              alt: media.name || file.name,
+            };
+  
+            setImages((prev) =>
+              prev.map((img) =>
+                img.src === previewSrc ? realImage : img
+              )
+            );
+          } else {
+            console.warn('Path manquant, on garde le preview local.');
+          }
+        } catch (err) {
+          console.error('Erreur upload image :', err);
+          setImages((prev) => prev.filter((img) => img.src !== previewSrc));
+        }
+      }
     }
   };
 

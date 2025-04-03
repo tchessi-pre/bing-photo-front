@@ -27,5 +27,19 @@ export const mediaService = {
       console.error('Erreur lors de la récupération des médias:', error);
       throw error;
     }
-  }
+  },
+  async importToAlbum(albumId: number, file: File) {
+    const formData = new FormData();
+    formData.append('album_id', albumId.toString());
+    formData.append('file', file);
+
+    const res = await api.post('/media', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return res.data;
+  },
 };
+

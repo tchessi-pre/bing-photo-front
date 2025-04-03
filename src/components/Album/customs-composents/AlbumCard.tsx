@@ -33,24 +33,21 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ id, images, title }) => {
     <div className="p-4">
       <Card
         onClick={handleClick}
-        className="p-2 w-[200px] h-[200px] cursor-pointer bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-200 hover:scale-105"
+        className="relative w-[200px] h-[200px] cursor-pointer bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-200 hover:scale-105 overflow-hidden"
       >
-        <CardContent className="p-0 w-full h-full">
-          <div className="grid grid-cols-2 gap-2 w-full h-full">
-            {randomImages.map((image, index) => (
-              <div key={index} className="relative w-full h-full">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover rounded-md"
-                  priority={false}
-                />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-        <div className="text-left text-gray-700 text-sm font-semibold mt-4">
+        
+        {randomImages[0] && (
+          <Image
+            src={randomImages[0].src}
+            alt={randomImages[0].alt}
+            fill
+            className="object-cover"
+            priority={false}
+          />
+        )}
+  
+        
+        <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-sm font-semibold p-2 truncate">
           {title}
         </div>
       </Card>

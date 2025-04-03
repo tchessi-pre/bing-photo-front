@@ -1,19 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import { EmptyPage } from '../customs';
 import PageHeader from '../customs/PageHeader';
 import AlbumCard from './customs-composents/AlbumCard';
-import { useAlbumStore } from '@/store/albumStore'; // pour lire les albums
+import { useAlbumStore } from '@/store/albumStore';
 import { useAlbum } from '@/hooks/album/useAlbum';
 
 const AlbumImageCard: React.FC = () => {
   const texts = appTexts.albumPage;
 
   const { fetchAlbums, createAlbum, isLoading, error } = useAlbum();
-  const albums = useAlbumStore((state) => state.albums); // on lit depuis le store
+  const albums = useAlbumStore((state) => state.albums);
 
   useEffect(() => {
     fetchAlbums(); // récupère les albums au montage
@@ -38,7 +38,6 @@ const AlbumImageCard: React.FC = () => {
 
   const handleDeleteAlbum = (albumId: number) => {
     console.log(`Demande suppression de l'album ${albumId}`);
-    // Tu peux ajouter une fonction deleteAlbum dans useAlbum si tu veux gérer ça aussi
   };
 
   return (
@@ -68,21 +67,29 @@ const AlbumImageCard: React.FC = () => {
             onAction={handleCreateAlbum}
           />
         ) : (
-          albums.map((album, index) => (
-            <div
-              key={album.id}
-              className="opacity-0 translate-y-4 animate-fade-in"
-              style={{ animationDelay: `${index * 105}ms` }}
-            >
-              <AlbumCard
-                id={album.id}
-                images={album.images}
-                onClick={() => handleCardClick(album.id)}
-                onDelete={() => handleDeleteAlbum(album.id)}
-                title={album.title}
-              />
-            </div>
-          ))
+          albums.map((album, index) => {
+            // Récupère la première image du média (s'il y en a)
+            const coverImage = album.media?.[0];
+            const images = coverImage
+              ? [{ src: `http://localhost:9090/${coverImage.path}`, alt: coverImage.name }]
+              : [];
+
+            return (
+              <div
+                key={album.id}
+                className="opacity-0 translate-y-4 animate-fade-in"
+                style={{ animationDelay: `${index * 105}ms` }}
+              >
+                <AlbumCard
+                  id={album.id}
+                  images={images}
+                  onClick={() => handleCardClick(album.id)}
+                  onDelete={() => handleDeleteAlbum(album.id)}
+                  title={album.title}
+                />
+              </div>
+            );
+          })
         )}
       </div>
     </div>
