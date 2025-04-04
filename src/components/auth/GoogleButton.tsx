@@ -8,9 +8,25 @@ interface GoogleButtonProps {
 }
 
 const GoogleButton: React.FC<GoogleButtonProps> = ({ text }) => {
+  const handleSignIn = async () => {
+    try {
+      const result = await signIn('google', { 
+        callbackUrl: '/overview',
+        redirect: false 
+      });
+      
+      if (result?.error) {
+        console.error('Google sign-in error:', result.error);
+        // Vous pouvez ajouter ici une gestion d'erreur dans le state
+      }
+    } catch (error) {
+      console.error('SignIn error:', error);
+    }
+  };
+
   return (
     <button
-      onClick={() => signIn('google', { callbackUrl: '/overview' })}
+      onClick={handleSignIn}
       className="w-full flex items-center justify-center gap-2 px-4 py-2 mb-4 text-sm font-medium text-gray-700 bg-white border border-green-800/15 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
     >
       <svg

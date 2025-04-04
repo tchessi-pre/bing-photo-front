@@ -1,5 +1,6 @@
 'use client';
 
+import { SessionProvider } from 'next-auth/react';
 import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import Header from '@/components/Header/Header';
@@ -45,10 +46,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content="default" />
 				<meta name="apple-mobile-web-app-title" content="BingPhoto" />
+				<meta name="mobile-web-app-capable" content="yes" />
+				<meta name="application-name" content="BingPhoto" />
 				<link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
 			</head>
 			<body className={`${robotoSans.variable} ${robotoMono.variable} antialiased`}>
-				<NoSSR>
+				<SessionProvider>
+					<NoSSR>
 					{isLoading ? (
 						<Loader />
 					) : isWelcomePage ? (
@@ -72,7 +77,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							<main className="flex-1 flex justify-center p-6">{children}</main>
 						</div>
 					)}
-				</NoSSR>
+					</NoSSR>
+				</SessionProvider>
 			</body>
 		</html>
 	);

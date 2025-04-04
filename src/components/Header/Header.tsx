@@ -10,6 +10,7 @@ import DropdownMenu from '../Sidebar/DropdownMenu';
 import LogoIcon from '@/assets/icons/logo.svg';
 import SelectedHeaderActions from './SelectedHeaderActions';
 import PinModal from '../private/PinModal';
+import { LogoutButton } from '../auth/LogoutButton';
 
 type HeaderProps = {
 	onDownload: () => void;
@@ -84,6 +85,7 @@ const Header: React.FC<HeaderProps> = ({
 							placeholder={placeholder}
 							className={isMobile ? 'w-44 ml-10' : 'w-auto ml-10 mr-10'}
 						/>
+						{!isMobile && <LogoutButton />}
 					</div>
 					{isMobile && (
 						<div className="mt-2 w-full">

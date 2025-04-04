@@ -3,7 +3,6 @@ import { Logo } from '@/components/Header';
 import LogoIcon from '@/assets/icons/logo.svg';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
-import GoogleButton from './GoogleButton';
 import appTexts from '@/assets/appTexts.json';
 
 interface AuthFormProps {
@@ -197,8 +196,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, isLoading, error })
 					<span className='px-2 text-green-700 bg-gray-200'>Ou</span>
 				</div>
 			</div>
-
-			<GoogleButton text={texts.googleButton} />
 
 			<p className='mt-4 text-sm text-center text-gray-600'>
 				{type === 'login' ? (

@@ -70,7 +70,7 @@ const removeToken = (): void => {
 
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
-    const response = await api.post('/login', credentials);
+    const response = await api.post('/auth/login', credentials);
     const data = response.data;
 
     const token = data?.token || data?.Token;
@@ -94,7 +94,7 @@ export interface RegisterResponse {
 
 export const signup = async (credentials: SignUpCredentials): Promise<RegisterResponse> => {
   try {
-    const response = await api.post('/register', credentials);
+    const response = await api.post('/auth/register', credentials);
     const data = response.data;
 
     if (!data || typeof data.Message !== 'string') {
@@ -126,7 +126,7 @@ export interface ForgotPasswordResponse {
 
 export const forgotPassword = async (email: string): Promise<ForgotPasswordResponse> => {
   try {
-    const response = await api.post('/forgot-password', { email });
+    const response = await api.post('/auth/forgot-password', { email });
     const data = response.data;
 
     if (!data || typeof data.message !== 'string') {
