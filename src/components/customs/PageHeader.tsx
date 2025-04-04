@@ -128,7 +128,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           className="hidden"
           onChange={onFileChange}
         />
-        <AlbumCreateDialog onCreateAlbum={onCreateAlbum} />
+        <AlbumCreateDialog createAlbum={onCreateAlbum} />
       </div>
       {/* Dialogue de confirmation pour la suppression */}
       <ConfirmationDialog

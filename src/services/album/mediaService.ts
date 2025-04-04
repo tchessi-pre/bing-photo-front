@@ -52,6 +52,15 @@ export const mediaService = {
   async detectSimilarMedia(albumId: number): Promise<DetectSimilarMediaResponse> {
     const response = await api.post('/media/similar', { album_id: albumId });
     return response.data;
-  }  
+  },
+
+  async deleteMedia(mediaId: number): Promise<void> {
+    try {
+      await api.delete(`/media/${mediaId}`);
+    } catch (error) {
+      console.error('Erreur lors de la suppression du média:', error);
+      throw error;
+    }
+  }
 };
 

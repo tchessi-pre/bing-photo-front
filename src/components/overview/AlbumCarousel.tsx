@@ -55,7 +55,7 @@ const AlbumCarousel: React.FC<AlbumCarouselProps> = ({ title, images, onImageCli
                   className="overflow-hidden transform transition-transform duration-500 ease-in-out group-hover:scale-105 rounded-lg"
                 >
                   <img
-                    src={image.src}
+                    src={image.src || '/images/placeholder.png'}
                     alt={image.alt}
                     className="object-cover w-[130px] h-[180px] xs:w-[150px] xs:h-[200px] sm:w-[200px] sm:h-[250px] md:w-[250px] md:h-[300px] lg:w-[300px] lg:h-[350px] xl:w-[350px] xl:h-[400px] transition-all duration-300"
                   />
