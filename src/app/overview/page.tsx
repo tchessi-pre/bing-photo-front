@@ -104,18 +104,20 @@ const OverviewPage: React.FC = () => {
 		return images[randomIndex];
 	};
 
-	const carouselImages = albums.map((album) => {
-		const coverImage = album?.media?.[0];
-		const imageSrc = coverImage
-			? `${process.env.NEXT_PUBLIC_S3}/${coverImage.path}`
-			: '';
-		return {
-			src: imageSrc,
-			alt: `${album.title} - ${coverImage?.name || 'Album cover'}`,
-			id: album.id,
-			albumTitle: album.title,
-		};
-	});
+	const carouselImages = albums
+  .map((album) => {
+    const coverImage = album?.media?.[0];
+    if (!coverImage || !coverImage.path) return null;
+
+    return {
+      src: `${process.env.NEXT_PUBLIC_S3}/${coverImage.path}`,
+      alt: `${album.title} - ${coverImage.name || 'Album cover'}`,
+      id: album.id,
+      albumTitle: album.title,
+    };
+  })
+  .filter((img) => img !== null); // ✅ filtre les nulls
+
 
 	const handleImageClick = (albumId: number) => {
 		router.push(`/albums/${albumId}`);
