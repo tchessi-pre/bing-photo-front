@@ -6,30 +6,7 @@ export const useAlbum = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const add = useAlbumStore((state) => state.addAlbum);
   const setAll = useAlbumStore((state) => state.setAlbums);
-
-  const createAlbum = useCallback(
-    async (name: string, description?: string) => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const newAlbum = await addAlbum(name, description);
-        add(newAlbum);
-        return newAlbum;
-      } catch (err: any) {
-        setError(
-          err.response?.data?.message ||
-            err.message ||
-            'Erreur lors de la création de l’album'
-        );
-        throw err;
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [add]
-  );
 
   const fetchAlbums = useCallback(async () => {
     setIsLoading(true);
@@ -49,6 +26,30 @@ export const useAlbum = () => {
       setIsLoading(false);
     }
   }, [setAll]);
+
+  const createAlbum = useCallback(
+    async (name: string, description?: string) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        await addAlbum(name, description);
+        // Ne pas ajouter manuellement au store → on re-fetch
+        const refreshedAlbums = await getAlbums();
+        setAll(refreshedAlbums);
+        return refreshedAlbums;
+      } catch (err: any) {
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            'Erreur lors de la création de l’album'
+        );
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setAll]
+  );
 
   return {
     createAlbum,

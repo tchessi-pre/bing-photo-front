@@ -29,8 +29,8 @@ const AlbumImageCard: React.FC = () => {
 
   const handleCreateAlbum = async () => {
     try {
-      const newAlbum = await createAlbum('Nouvel Album');
-      console.log(`Album créé : ${newAlbum.title}`);
+      await createAlbum('Nouvel Album');
+      console.log(`Album créé avec succès.`);
     } catch (err) {
       console.error('Erreur création album', err);
     }
@@ -76,8 +76,8 @@ const AlbumImageCard: React.FC = () => {
 
             return (
               <div
-                key={album.id}
-                className="opacity-0 translate-y-4 animate-fade-in"
+              key={album.id || `album-${index}`}
+              className="opacity-0 translate-y-4 animate-fade-in"
                 style={{ animationDelay: `${index * 105}ms` }}
               >
                 <AlbumCard
