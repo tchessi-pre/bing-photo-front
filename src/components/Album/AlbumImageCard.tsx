@@ -16,7 +16,7 @@ const AlbumImageCard: React.FC = () => {
   const albums = useAlbumStore((state) => state.albums);
 
   useEffect(() => {
-    fetchAlbums(); // récupère les albums au montage
+    fetchAlbums();
   }, [fetchAlbums]);
 
   const handleCardClick = (albumId: number) => {

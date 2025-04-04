@@ -1,6 +1,5 @@
 'use client';
 
-import { getAlbums } from '@/services/album/albumService';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import appTexts from '@/assets/appTexts.json';
@@ -13,6 +12,8 @@ import {
 } from '@/services/album/mediaService';
 import { useMainAlbum } from '@/hooks/album/useMainAlbum';
 import { decodeToken } from '@/services/auth/authService';
+import { useAlbum } from '@/hooks/album/useAlbum';
+import { useAlbumStore } from '@/store/albumStore';
 
 const OverviewPage: React.FC = () => {
 	const tokenData = decodeToken();
@@ -22,7 +23,12 @@ const OverviewPage: React.FC = () => {
 	const router = useRouter();
 	const texts = appTexts.overviewPage;
 
-	const [albums] = useState(() => getAlbums());
+	const {
+		fetchAlbums,
+		isLoading: albumsLoading,
+		error: albumsError,
+	} = useAlbum();
+	const albums = useAlbumStore((state) => state.albums);
 	const [mainAlbumId, setMainAlbumId] = useState<number | null>(null);
 
 	const [photos, setPhotos] = useState<
@@ -67,10 +73,11 @@ const OverviewPage: React.FC = () => {
 	useEffect(() => {
 		let isMounted = true;
 
-		const getMainAlbumAndMedia = async () => {
+		const initializeData = async () => {
 			if (!userId) return;
 
 			try {
+				await fetchAlbums();
 				const id = await fetchMainAlbumId(userId);
 				if (isMounted && id !== null && id !== mainAlbumId) {
 					setMainAlbumId(id);
@@ -84,7 +91,7 @@ const OverviewPage: React.FC = () => {
 			}
 		};
 
-		getMainAlbumAndMedia();
+		initializeData();
 
 		return () => {
 			isMounted = false;
@@ -97,15 +104,18 @@ const OverviewPage: React.FC = () => {
 		return images[randomIndex];
 	};
 
-	// const carouselImages = albums.map((album) => {
-	// 	const randomImage = getRandomImage(album.images);
-	// 	return {
-	// 		src: randomImage.src,
-	// 		alt: `${album.title} - ${randomImage.alt}`,
-	// 		id: album.id,
-	// 		albumTitle: album.title,
-	// 	};
-	// });
+	const carouselImages = albums.map((album) => {
+		const coverImage = album?.media?.[0];
+		const imageSrc = coverImage
+			? `${process.env.NEXT_PUBLIC_S3}/${coverImage.path}`
+			: '';
+		return {
+			src: imageSrc,
+			alt: `${album.title} - ${coverImage?.name || 'Album cover'}`,
+			id: album.id,
+			albumTitle: album.title,
+		};
+	});
 
 	const handleImageClick = (albumId: number) => {
 		router.push(`/albums/${albumId}`);
@@ -114,7 +124,11 @@ const OverviewPage: React.FC = () => {
 	return (
 		<div className='mt-8 md:ml-8 md:mr-8'>
 			<div className='w-full'>
-				{/* <AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} /> */}
+				<AlbumCarousel
+					title={texts.title}
+					images={carouselImages}
+					onImageClick={handleImageClick}
+				/>
 			</div>
 			<div>
 				{error && <div className='text-red-500 text-center my-4'>{error}</div>}

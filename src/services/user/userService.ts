@@ -5,7 +5,6 @@ import { UpdateUserProfileData } from '@/types/updateUserProfile';
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
     const response = await api.get('/auth/get-me');
-    console.log('response: >>>>', response);
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
