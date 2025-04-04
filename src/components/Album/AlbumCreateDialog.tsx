@@ -29,8 +29,10 @@ const AlbumCreateDialog = () => {
 		}
 		try {
 			await createAlbum(albumName, description);
-			setAlbumName('');
-			setDescription('');
+			setTimeout(() => {
+				setAlbumName('');
+				setDescription('');
+			  }, 0);
 		} catch (err) {
 			console.error('Erreur création album', err);
 			alert('Erreur lors de la création de l\'album.');
@@ -41,8 +43,10 @@ const AlbumCreateDialog = () => {
 		<Dialog>
 			<DialogTrigger asChild>
 				<Button className='flex items-center gap-2 bg-green-900 text-white hover:bg-green-800 transition-colors'>
+				<Button className='flex items-center gap-2 bg-green-900 text-white hover:bg-green-800 transition-colors'>
 					<Plus className='w-5 h-5' />
 					{texts.createAlbumButton}
+				</Button> 
 				</Button>
 			</DialogTrigger>
 			<DialogContent className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
