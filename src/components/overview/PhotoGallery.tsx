@@ -9,6 +9,7 @@ import ImageModal from '@/components/customs/ImageModal';
 import ConfirmationDialog from '@/components/customs/ConfirmationDialog';
 import ShareModal from '@/components/share/ShareModal';
 import appTexts from '@/assets/appTexts.json';
+import { useMedia } from '@/hooks/album/useMedia';
 
 type PhotoGalleryProps = {
   photos: Photo[];
@@ -69,10 +70,19 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   };
 
   // Confirm. suppression
-  const handleConfirmDelete = () => {
-    console.log(texts.consoleDeletedImages, Array.from(selectedImages));
-    setSelectedImages(new Set());
-    setIsConfirmationOpen(false);
+  const { deleteMedia, isLoading: isDeletingMedia, error: deleteError } = useMedia();
+
+  const handleConfirmDelete = async () => {
+    try {
+      const deletePromises = Array.from(selectedImages).map(id => deleteMedia(id));
+      await Promise.all(deletePromises);
+      setSelectedImages(new Set());
+      setIsConfirmationOpen(false);
+      // Recharger la galerie ou mettre à jour l'état local
+      window.location.reload();
+    } catch (error) {
+      console.error('Erreur lors de la suppression des médias:', error);
+    }
   };
 
   // Annuler suppression

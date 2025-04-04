@@ -86,7 +86,8 @@ const Header: React.FC<HeaderProps> = ({
 					onFavorite={onFavorite}
 					onShare={onShare}
 					onPrivate={handlePrivateClick}
-					onDownload={handleDownloadClick} // Ajouté
+					onDownload={handleDownloadClick}
+					onDelete={onDelete} // Ajout de la prop onDelete
 				/>
 			) : (
 				<div className="flex items-center justify-between w-full">

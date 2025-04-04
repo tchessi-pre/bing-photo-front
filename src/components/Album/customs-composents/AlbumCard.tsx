@@ -35,18 +35,16 @@ const AlbumCard: React.FC<AlbumCardProps> = ({ id, images, title }) => {
         onClick={handleClick}
         className="relative w-[200px] h-[200px] cursor-pointer bg-gray-100 shadow-lg hover:shadow-xl transition-transform duration-200 hover:scale-105 overflow-hidden"
       >
-        
-        {randomImages[0] && (
-          <Image
-            src={randomImages[0].src}
-            alt={randomImages[0].alt}
-            fill
-            className="object-cover"
-            priority={false}
-          />
-        )}
-  
-        
+
+        <Image
+          src={randomImages[0]?.src || "/images/placeholder.png"}
+          alt={randomImages[0]?.alt || "Album placeholder"}
+          fill
+          className="object-cover"
+          priority={false}
+        />
+
+
         <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-sm font-semibold p-2 truncate">
           {title}
         </div>
