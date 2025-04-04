@@ -37,7 +37,7 @@ const ProfileContent = ({
 		picture: profileImage || ''
 	});
 
-	const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+	const initials = `${username.charAt(0)}${username.charAt(1)}`.toUpperCase();
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;

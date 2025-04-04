@@ -3,172 +3,188 @@
 import api from "@/api/apiConfig";
 import { useAlbumStore } from "@/store/albumStore";
 import { useAuthStore } from "@/store/authStore";
+import { Album } from "@/types/types";
 
 
-export interface Album {
-  id: number;
-  title: string;
-  images: { src: string; alt: string }[];
-}
 
-const albums: Album[] = [
-  {
-    id: 1,
-    title: 'Vacances à la plage',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 2,
-    title: 'Anniversaire',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 3,
-    title: 'Randonnée en montagne',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 4,
-    title: 'Mariage de Julie et Paul',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 5,
-    title: 'Soirée entre amis',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 6,
-    title: 'Voyage à New York',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 7,
-    title: 'Noël en famille',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 8,
-    title: 'Pique-nique au parc',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 9,
-    title: 'Noël en famille',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 10,
-    title: 'Pique-nique au parc',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 11,
-    title: 'A la cascade',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 12,
-    title: 'Pique-nique à Borély',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 13,
-    title: 'A la cascade',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-  {
-    id: 14,
-    title: 'Pique-nique à Borély',
-    images: [
-      { src: '/images/album1.jpg', alt: 'Image 1' },
-      { src: '/images/album2.jpg', alt: 'Image 2' },
-      { src: '/images/album3.jpg', alt: 'Image 3' },
-      { src: '/images/album4.jpg', alt: 'Image 4' },
-    ],
-  },
-];
+
+// const albums: Album[] = [
+//   {
+//     id: 1,
+//     title: 'Vacances à la plage',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: 'Anniversaire',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     title: 'Randonnée en montagne',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 4,
+//     title: 'Mariage de Julie et Paul',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 5,
+//     title: 'Soirée entre amis',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 6,
+//     title: 'Voyage à New York',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 7,
+//     title: 'Noël en famille',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 8,
+//     title: 'Pique-nique au parc',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 9,
+//     title: 'Noël en famille',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 10,
+//     title: 'Pique-nique au parc',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 11,
+//     title: 'A la cascade',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 12,
+//     title: 'Pique-nique à Borély',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 13,
+//     title: 'A la cascade',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+//   {
+//     id: 14,
+//     title: 'Pique-nique à Borély',
+//     images: [
+//       { src: '/images/album1.jpg', alt: 'Image 1' },
+//       { src: '/images/album2.jpg', alt: 'Image 2' },
+//       { src: '/images/album3.jpg', alt: 'Image 3' },
+//       { src: '/images/album4.jpg', alt: 'Image 4' },
+//     ],
+//   },
+// ];
 
 /**
  * Récupère tous les albums
  * @returns {Album[]} Liste des albums
  */
-export const getAlbums = (): Album[] => {
-  return albums;
-};
+export const getAlbums = async (): Promise<Album[]> => {
+  try {
+    const user = useAuthStore.getState().user;
+    if (!user) throw new Error('User not authenticated');
 
+    const response = await api.get(`/albums/user`, {
+      params: { user_id: user.id },
+    });
+    console.log(response.data)
+    const albums: Album[] = response.data.albums;
+
+    if (!Array.isArray(albums)) {
+      throw new Error('Invalid response format: albums must be an array');
+    }
+
+    useAlbumStore.getState().setAlbums(albums); // Tu peux aussi faire addAlbums si tu veux les empiler
+
+    return albums;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des albums:', error);
+    throw error;
+  }
+};
 /**
  * Récupère un album par son ID
  * @param {number} id - L'ID de l'album
  * @returns {Album | undefined} L'album correspondant ou undefined s'il n'existe pas
  */
 export const getAlbumById = (id: number): Album | undefined => {
-  return albums.find((album) => album.id === id);
+  return albums.find((album:Album) => album.id === id);
 };
 
 /**
@@ -178,17 +194,7 @@ export const getAlbumById = (id: number): Album | undefined => {
  * @returns {Album} L'album ajouté
  */
 
-export interface Album {
-  id: number;
-  name: string;
-  user_id: number;
-  bucketName: string;
-  isPrivate: boolean;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-  existsInS3?: boolean;
-}
+
 
 export const addAlbum = async (
   name: string,

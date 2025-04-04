@@ -97,15 +97,15 @@ const OverviewPage: React.FC = () => {
 		return images[randomIndex];
 	};
 
-	const carouselImages = albums.map((album) => {
-		const randomImage = getRandomImage(album.images);
-		return {
-			src: randomImage.src,
-			alt: `${album.title} - ${randomImage.alt}`,
-			id: album.id,
-			albumTitle: album.title,
-		};
-	});
+	// const carouselImages = albums.map((album) => {
+	// 	const randomImage = getRandomImage(album.images);
+	// 	return {
+	// 		src: randomImage.src,
+	// 		alt: `${album.title} - ${randomImage.alt}`,
+	// 		id: album.id,
+	// 		albumTitle: album.title,
+	// 	};
+	// });
 
 	const handleImageClick = (albumId: number) => {
 		router.push(`/albums/${albumId}`);
@@ -114,11 +114,7 @@ const OverviewPage: React.FC = () => {
 	return (
 		<div className='mt-8 md:ml-8 md:mr-8'>
 			<div className='w-full'>
-				<AlbumCarousel
-					title={texts.title}
-					images={carouselImages}
-					onImageClick={handleImageClick}
-				/>
+				{/* <AlbumCarousel title={texts.title} images={carouselImages} onImageClick={handleImageClick} /> */}
 			</div>
 			<div>
 				{error && <div className='text-red-500 text-center my-4'>{error}</div>}

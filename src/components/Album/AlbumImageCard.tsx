@@ -1,17 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
-import { getAlbums, addAlbum, deleteAlbum } from '@/services/album/albumService';
+import React, { useEffect } from 'react';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import { EmptyPage } from '../customs';
 import PageHeader from '../customs/PageHeader';
 import AlbumCard from './customs-composents/AlbumCard';
+import { useAlbumStore } from '@/store/albumStore';
+import { useAlbum } from '@/hooks/album/useAlbum';
 
 const AlbumImageCard: React.FC = () => {
   const texts = appTexts.albumPage;
 
-  const [albums, setAlbums] = useState(getAlbums());
+  const { fetchAlbums, createAlbum, isLoading, error } = useAlbum();
+  const albums = useAlbumStore((state) => state.albums);
+
+  useEffect(() => {
+    fetchAlbums(); // récupère les albums au montage
+  }, [fetchAlbums]);
 
   const handleCardClick = (albumId: number) => {
     console.log(`Album ${albumId} cliqué !`);
@@ -21,19 +27,17 @@ const AlbumImageCard: React.FC = () => {
     console.log('Importer des images !');
   };
 
-  const handleCreateAlbum = () => {
-    const newAlbum = addAlbum('Nouvel Album');
-    setAlbums(getAlbums());
-    console.log(`Album créé : ${newAlbum.title}`);
+  const handleCreateAlbum = async () => {
+    try {
+      const newAlbum = await createAlbum('Nouvel Album');
+      console.log(`Album créé : ${newAlbum.title}`);
+    } catch (err) {
+      console.error('Erreur création album', err);
+    }
   };
 
   const handleDeleteAlbum = (albumId: number) => {
-    if (deleteAlbum(albumId)) {
-      setAlbums(getAlbums());
-      console.log(`Album ${albumId} supprimé.`);
-    } else {
-      console.log(`Échec de la suppression de l'album ${albumId}.`);
-    }
+    console.log(`Demande suppression de l'album ${albumId}`);
   };
 
   return (
@@ -48,8 +52,13 @@ const AlbumImageCard: React.FC = () => {
         onAction={() => console.log('Action réalisée')}
         albumCount={albums.length}
       />
+
       <div className="flex flex-wrap justify-center gap-4 mt-4 md:ml-8 md:mr-8">
-        {albums.length === 0 ? (
+        {isLoading ? (
+          <p>Chargement des albums...</p>
+        ) : error ? (
+          <p className="text-red-500">Erreur : {error}</p>
+        ) : albums.length === 0 ? (
           <EmptyPage
             title={texts.emptyPageTitle}
             message={texts.emptyPageMessage}
@@ -58,21 +67,29 @@ const AlbumImageCard: React.FC = () => {
             onAction={handleCreateAlbum}
           />
         ) : (
-          albums.map((album, index) => (
-            <div
-              key={album.id}
-              className={`opacity-0 translate-y-4 animate-fade-in`}
-              style={{ animationDelay: `${index * 105}ms` }}
-            >
-              <AlbumCard
-                id={album.id}
-                images={album.images}
-                onClick={() => handleCardClick(album.id)}
-                onDelete={() => handleDeleteAlbum(album.id)}
-                title={album.title}
-              />
-            </div>
-          ))
+          albums.map((album, index) => {
+            // Récupère la première image du média (s'il y en a)
+            const coverImage = album.media?.[0];
+            const images = coverImage
+              ? [{ src: `http://localhost:9090/${coverImage.path}`, alt: coverImage.name }]
+              : [];
+
+            return (
+              <div
+                key={album.id}
+                className="opacity-0 translate-y-4 animate-fade-in"
+                style={{ animationDelay: `${index * 105}ms` }}
+              >
+                <AlbumCard
+                  id={album.id}
+                  images={images}
+                  onClick={() => handleCardClick(album.id)}
+                  onDelete={() => handleDeleteAlbum(album.id)}
+                  title={album.title}
+                />
+              </div>
+            );
+          })
         )}
       </div>
     </div>

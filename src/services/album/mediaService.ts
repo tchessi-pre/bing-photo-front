@@ -17,6 +17,14 @@ export interface MediaResponse {
   media: Media[];
 }
 
+export interface MediaGroup {
+  media: Media[];
+}
+
+export interface DetectSimilarMediaResponse {
+  groups: MediaGroup[];
+}
+
 export const mediaService = {
   async getAlbumMedia(albumId: number): Promise<MediaResponse> {
     try {
@@ -27,5 +35,23 @@ export const mediaService = {
       console.error('Erreur lors de la récupération des médias:', error);
       throw error;
     }
-  }
+  },
+  async importToAlbum(albumId: number, file: File) {
+    const formData = new FormData();
+    formData.append('album_id', albumId.toString());
+    formData.append('file', file);
+
+    const res = await api.post('/media', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return res.data;
+  },
+  async detectSimilarMedia(albumId: number): Promise<DetectSimilarMediaResponse> {
+    const response = await api.post('/media/similar', { album_id: albumId });
+    return response.data;
+  }  
 };
+

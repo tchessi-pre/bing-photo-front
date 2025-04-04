@@ -21,12 +21,18 @@ export type DateGroupProps = {
   onZoom: (id: number) => void;
 };
 
-export type Album = {
+export type Album= {
   id: number;
   title: string;
-  userId: number;
+  user_id: number;
+  bucketName: string;
+  isPrivate: boolean;
   description?: string;
-};
+  images: { src: string; alt: string }[];
+  createdAt: string;
+  updatedAt: string;
+  existsInS3?: boolean;
+}
 
 export type AlbumSelectProps = {
   albums: Album[];
