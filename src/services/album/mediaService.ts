@@ -17,6 +17,14 @@ export interface MediaResponse {
   media: Media[];
 }
 
+export interface MediaGroup {
+  media: Media[];
+}
+
+export interface DetectSimilarMediaResponse {
+  groups: MediaGroup[];
+}
+
 export const mediaService = {
   async getAlbumMedia(albumId: number): Promise<MediaResponse> {
     try {
@@ -41,5 +49,9 @@ export const mediaService = {
 
     return res.data;
   },
+  async detectSimilarMedia(albumId: number): Promise<DetectSimilarMediaResponse> {
+    const response = await api.post('/media/similar', { album_id: albumId });
+    return response.data;
+  }  
 };
 

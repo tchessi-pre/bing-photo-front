@@ -14,30 +14,37 @@ import {
 
 import { PageHeader } from '@/components/Album';
 import { EmptyPage } from '@/components/customs';
-import { mediaService } from '@/services/album/mediaService';
+import { mediaService, Media } from '@/services/album/mediaService';
 
 const AlbumDetailPage: React.FC = () => {
+  type Image = {
+    id?: number;
+    src: string;
+    alt: string;
+  };
+
   const texts = appTexts.AlbumDetailPage;
   const params = useParams();
   const albumId = parseInt(params?.id as string, 10);
 
   const [album, setAlbum] = useState<any | null>(null);
-  const [images, setImages] = useState<{ src: string; alt: string }[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
+  const [similarGroups, setSimilarGroups] = useState<Media[][]>([]);
   const [scanning, setScanning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 🔁 Récupère les images depuis le backend au montage
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getAlbums(); // charge les albums dans le store
+        await getAlbums();
         const currentAlbum = getAlbumById(albumId);
         setAlbum(currentAlbum);
 
         const response = await mediaService.getAlbumMedia(albumId);
         const formattedImages = Array.isArray(response.media)
           ? response.media.map((media: any) => ({
+              id: media.id,
               src: `http://localhost:9090/${media.path}`,
               alt: media.name || 'image',
             }))
@@ -63,29 +70,20 @@ const AlbumDetailPage: React.FC = () => {
     if (files) {
       for (const file of Array.from(files)) {
         const previewSrc = URL.createObjectURL(file);
-  
-        // 1. Affiche l’image immédiatement en local
         const tempImage = { src: previewSrc, alt: file.name };
         setImages((prev) => [...prev, tempImage]);
-  
+
         try {
-          // 2. Envoie au backend
           const media = await mediaService.importToAlbum(albumId, file);
-  
-          // 3. Si le backend répond bien, on remplace l’image locale par la vraie
           if (media && media.path) {
             const realImage = {
+              id: media.id,
               src: `http://localhost:9090/${media.path}`,
               alt: media.name || file.name,
             };
-  
             setImages((prev) =>
-              prev.map((img) =>
-                img.src === previewSrc ? realImage : img
-              )
+              prev.map((img) => (img.src === previewSrc ? realImage : img))
             );
-          } else {
-            console.warn('Path manquant, on garde le preview local.');
           }
         } catch (err) {
           console.error('Erreur upload image :', err);
@@ -102,16 +100,27 @@ const AlbumDetailPage: React.FC = () => {
     setSelectedImages(new Set());
   };
 
-  const handleSelectSimilarImages = () => {
-    const newSelection = new Set<number>();
-    images.forEach((image, index) => {
-      if (image.alt.includes('similar')) {
-        newSelection.add(index);
-      }
-    });
-    setSelectedImages(newSelection);
-    setScanning(true);
-    setTimeout(() => setScanning(false), 3000);
+  const handleSelectSimilarImages = async () => {
+    try {
+      setScanning(true);
+      const response = await mediaService.detectSimilarMedia(albumId);
+      const groups = response.groups ?? [];
+
+      setSimilarGroups(groups.map((group) => group.media));
+
+      const firstGroup = groups[0]?.media ?? [];
+      const newSelection = new Set<number>();
+      firstGroup.forEach((media) => {
+        const index = images.findIndex((img) => img.id === media.id);
+        if (index !== -1) newSelection.add(index);
+      });
+
+      setSelectedImages(newSelection);
+    } catch (err) {
+      console.error('Erreur détection similaires :', err);
+    } finally {
+      setTimeout(() => setScanning(false), 3000);
+    }
   };
 
   if (!album) {
@@ -144,13 +153,41 @@ const AlbumDetailPage: React.FC = () => {
             onFileChange={handleFileChange}
           />
         ) : (
-          <ImageGrid
-            images={images}
-            selectedImages={selectedImages}
-            onImageSelect={handleImageSelect}
-            onDelete={() => null}
-            scanning={scanning}
-          />
+          <>
+            <ImageGrid
+              images={images}
+              selectedImages={selectedImages}
+              onImageSelect={handleImageSelect}
+              onDelete={() => null}
+              scanning={scanning}
+            />
+
+            {similarGroups.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-lg font-semibold mb-4 text-gray-700">
+                  Groupes de médias similaires détectés
+                </h2>
+
+                <div className="space-y-6">
+                  {similarGroups.map((group, groupIndex) => (
+                    <div key={groupIndex}>
+                      <h3 className="text-sm text-gray-500 mb-2">Groupe {groupIndex + 1}</h3>
+                      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        {group.map((media) => (
+                          <img
+                            key={media.id}
+                            src={`http://localhost:9090/${media.path}`}
+                            alt={media.name}
+                            className="w-full h-auto object-cover rounded shadow"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
