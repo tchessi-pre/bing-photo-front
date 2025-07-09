@@ -10,6 +10,12 @@ import ConfirmationDialog from '@/components/customs/ConfirmationDialog';
 import ShareModal from '@/components/share/ShareModal';
 import appTexts from '@/assets/appTexts.json';
 import { useMedia } from '@/hooks/album/useMedia';
+import { useAlbumStore } from '@/store/albumStore';
+import api from '@/api/apiConfig'; 
+import { useRouter } from 'next/navigation';
+
+
+
 
 type PhotoGalleryProps = {
   photos: Photo[];
@@ -24,6 +30,15 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   const [favoriteImages, setFavoriteImages] = useState<Set<number>>(new Set());
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isAddToAlbumModalOpen, setIsAddToAlbumModalOpen] = useState(false);
+  const [selectedAlbumId, setSelectedAlbumId] = useState<number | null>(null);
+  const albums = useAlbumStore((state) => state.albums);
+
+  const handleAddToAlbum = () => {
+    setIsAddToAlbumModalOpen(true);
+    setSelectedAlbumId(null);
+    console.log("coucou");
+  };
 
   const isPlaceholder = (src: string) => {
     return src === '/images/placeholder.png';
@@ -95,8 +110,36 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
     setIsShareModalOpen(true);
   };
 
+  
   // Récupérer les images sélectionnées
+  const router = useRouter();
   const selectedPhotos = photos.filter((photo) => selectedImages.has(photo.id));
+  const handleConfirmAddToAlbum = async () => {
+    if (!selectedAlbumId) return;
+  
+    const photoIds = Array.from(selectedImages); // Convertir le Set en tableau
+  
+    try {
+      // Option 1 : exécuter toutes les requêtes en parallèle
+      await Promise.all(
+        photoIds.map((id) =>
+          api.post(`/media/${id}/move`, {
+            target_album_id: selectedAlbumId,
+          })
+        )
+      );
+  
+      setIsAddToAlbumModalOpen(false);
+      setSelectedImages(new Set());
+      router.push(`/albums/${selectedAlbumId}`);
+    } catch (err) {
+      console.error("Erreur lors du déplacement des images :", err);
+      // setAddError("Erreur lors de l'ajout aux albums.");
+    } finally {
+      // setIsAdding(false);
+    }
+  };
+  
 
   return (
     <div className="w-full">
@@ -109,6 +152,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
         onFavorite={handleFavorite}
         onDelete={handleOpenDeleteConfirmation}
         onShare={handleShare}
+        onAddToAlbum={handleAddToAlbum}
       />
 
       <div className="px-4 py-6 mt-8">
@@ -236,6 +280,17 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
           selectedImages={selectedPhotos}
+        />
+        <ConfirmationDialog
+          isOpen={isAddToAlbumModalOpen}
+          onConfirm={handleConfirmAddToAlbum}
+          onCancel={() => setIsAddToAlbumModalOpen(false)}
+          title="Ajouter à un album"
+          description="Sélectionnez l'album dans lequel ajouter les images sélectionnées."
+          confirmLabel="Ajouter"
+          cancelLabel="Annuler"
+          albums={albums}
+          onAlbumChange={setSelectedAlbumId}
         />
       </div>
     </div>

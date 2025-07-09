@@ -23,7 +23,7 @@ export type DateGroupProps = {
 
 export type Album= {
   id: number;
-  title: string;
+  name: string;
   user_id: number;
   bucketName: string;
   isPrivate: boolean;

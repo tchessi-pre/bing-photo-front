@@ -163,7 +163,7 @@ export const getAlbums = async (): Promise<Album[]> => {
     const response = await api.get(`/albums/user`, {
       params: { user_id: user.id },
     });
-    console.log(response.data)
+    console.log(response)
     const albums: Album[] = response.data.albums;
 
     if (!Array.isArray(albums)) {
@@ -224,19 +224,8 @@ export const addAlbum = async (
 
 
 
-/**
- * Supprime un album par son ID
- * @param {number} id - L'ID de l'album à supprimer
- * @returns {boolean} Indique si la suppression a réussi
- */
-
-export const deleteAlbum = (id: number): boolean => {
-  const albumIndex = albums.findIndex((album) => album.id === id);
-  if (albumIndex === -1) {
-    return false;
-  }
-  albums.splice(albumIndex, 1);
-  return true;
+export const deleteAlbum = async (albumId: number) => {
+  await api.delete(`/albums/${albumId}`);
 };
 
 /**

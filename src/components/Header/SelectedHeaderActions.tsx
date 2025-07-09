@@ -18,6 +18,7 @@ type SelectedHeaderActionsProps = {
   onShare?: () => void;
   onPrivate?: () => void;
   onDownload?: () => void;
+  onAddToAlbum?: () => void;
 };
 
 const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
@@ -28,6 +29,7 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
   onDelete,
   onShare,
   onPrivate,
+  onAddToAlbum,
 }) => {
   const [visibleTooltip, setVisibleTooltip] = useState<string | null>(null);
 
@@ -87,7 +89,7 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
           >
             <TooltipCustom message="Ajouter à un album" position="bottom" isVisible={visibleTooltip === 'add'}>
               <button
-                onClick={onFavorite}
+                onClick={onAddToAlbum}
                 className="flex flex-col items-center justify-center text-gray-600 hover:text-red-600 hover:scale-110 transition-transform duration-200"
               >
                 <AddSquareIcon className="w-10 h-10" />

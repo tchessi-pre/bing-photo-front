@@ -24,7 +24,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
 
       setAuth: (user, token) => {
-        console.log(user, 'user', token, 'token');
+        // console.log(user, 'user', token, 'token');
         if(user===null||!user) {
           return
         }

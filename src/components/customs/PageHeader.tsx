@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { CloudDownload } from 'lucide-react';
 import AlbumCreateDialog from '@/components/Album/AlbumCreateDialog';
@@ -21,6 +21,8 @@ type PageHeaderProps = {
   albumCount?: number;
   imageCount?: number;
   selectedImageCount?: number;
+  showAddImagesButton?: boolean;
+  onAddImages?: () => void;
 };
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -32,9 +34,20 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   albumCount,
   imageCount,
   selectedImageCount,
+  showAddImagesButton = false,
+  onAddImages,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const pathname = usePathname(); // Récupérer l'URL actuelle
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddImagesClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // reset pour permettre plusieurs imports successifs
+      fileInputRef.current.click();
+    }
+    if (onAddImages) onAddImages();
+  };
 
   const handleDeleteClick = () => {
     setIsDialogOpen(true);
@@ -100,18 +113,39 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           </motion.div>
         )}
 
-        {isAlbumDetailPage && (
-          <TooltipCustom message="Sélectionner similaires" position="bottom">
-            <Button
-              onClick={onSelectSimilarImages}
-              className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
-            >
-              <KillerFeatureIcon style={{ width: '20px', height: '20px' }} />
-            </Button>
-          </TooltipCustom>
+{isAlbumDetailPage && (
+          <>
+            <TooltipCustom message="Sélectionner similaires" position="bottom">
+              <Button
+                onClick={onSelectSimilarImages}
+                className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
+              >
+                <KillerFeatureIcon style={{ width: '20px', height: '20px' }} />
+              </Button>
+            </TooltipCustom>
+            {imageCount > 0 && (
+              <>
+                <Button
+                  onClick={handleAddImagesClick}
+                  className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-white bg-green-600 rounded-lg cursor-pointer hover:bg-green-700 transition-colors"
+                >
+                  + Ajouter des images
+                </Button>
+                {/* input file caché, même logique que le bouton + Ajouter des images */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={onFileChange}
+                />
+              </>
+             )}
+          </>
         )}
 
-        <TooltipCustom message="Importer des images" position="bottom">
+        {/* <TooltipCustom message="Importer des images" position="bottom">
           <label
             htmlFor="file-input"
             className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-bold text-gray-700 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300 transition-colors"
@@ -123,12 +157,15 @@ const PageHeader: React.FC<PageHeaderProps> = ({
         <input
           type="file"
           id="file-input"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={onFileChange}
-        />
-        <AlbumCreateDialog createAlbum={onCreateAlbum} />
+          ac="image/*"       className="hidden"
+          onChange={oileChange}
+        /> */}
+        {!isAlbumDetailPage && (
+          
+            <AlbumCreateDialog createAlbum={onCreateAlbum} />
+
+          
+        )}
       </div>
       {/* Dialogue de confirmation pour la suppression */}
       <ConfirmationDialog

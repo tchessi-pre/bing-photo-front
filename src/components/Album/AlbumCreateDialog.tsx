@@ -18,6 +18,7 @@ import { useAlbum } from '@/hooks/album/useAlbum';
 const AlbumCreateDialog = () => {
 	const [albumName, setAlbumName] = useState('');
 	const [description, setDescription] = useState('');
+	const [isOpen, setIsOpen] = useState(false);
 	const { createAlbum, isLoading, error } = useAlbum();
 
 	const texts = appTexts.albumPage.albumCreateDialog;
@@ -32,6 +33,7 @@ const AlbumCreateDialog = () => {
 			setTimeout(() => {
 				setAlbumName('');
 				setDescription('');
+				setIsOpen(false);
 			  }, 0);
 		} catch (err) {
 			console.error('Erreur création album', err);
@@ -40,14 +42,12 @@ const AlbumCreateDialog = () => {
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			<DialogTrigger asChild>
-				<Button className='flex items-center gap-2 bg-green-900 text-white hover:bg-green-800 transition-colors'>
 				<Button className='flex items-center gap-2 bg-green-900 text-white hover:bg-green-800 transition-colors'>
 					<Plus className='w-5 h-5' />
 					{texts.createAlbumButton}
 				</Button> 
-				</Button>
 			</DialogTrigger>
 			<DialogContent className='bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg'>
 				<DialogHeader>

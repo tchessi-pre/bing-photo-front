@@ -61,7 +61,7 @@ const OverviewPage: React.FC = () => {
 			setPhotos(formattedPhotos);
 			setError(null);
 		} catch (error) {
-			setError('Failed to load photos');
+			setError('Aucune photo pour l\'instant');
 			console.error('Error fetching media:', error);
 			setPhotos([]);
 		} finally {
@@ -125,20 +125,23 @@ const OverviewPage: React.FC = () => {
 
 	return (
 		<div className='mt-8 md:ml-8 md:mr-8'>
-			<div className='w-full'>
+			{/* <div className='w-full'>
 				<AlbumCarousel
 					title={texts.title}
 					images={carouselImages}
 					onImageClick={handleImageClick}
 				/>
-			</div>
+			</div> */}
 			<div>
-				{error && <div className='text-red-500 text-center my-4'>{error}</div>}
-				{isLoading ? (
-					<div className='text-center my-4'>Loading photos...</div>
-				) : (
-					<PhotoGallery photos={photos} />
-				)}
+			{isLoading ? (
+			<div className="text-center py-10 text-gray-500">Chargement...</div>
+			) : photos.length === 0 ? (
+			<div className="flex flex-col items-center justify-center h-64 text-gray-500 text-lg">
+				<p>Importer une photo pour commencer</p>
+			</div>
+			) : (
+			<PhotoGallery photos={photos} />
+			)}
 			</div>
 		</div>
 	);

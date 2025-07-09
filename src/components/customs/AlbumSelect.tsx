@@ -6,7 +6,7 @@ import { AlbumSelectProps } from '@/types/types';
 
 const AlbumSelect: React.FC<AlbumSelectProps> = ({ albums, onAlbumChange }) => {
   return (
-    <Select >
+    <Select>
       <Select onValueChange={(value) => onAlbumChange(parseInt(value, 10))}>
         <SelectTrigger className="mt-2 w-full border-gray-300 rounded-md shadow-sm">
           <SelectValue placeholder="-- Sélectionner un album --" />
@@ -14,7 +14,7 @@ const AlbumSelect: React.FC<AlbumSelectProps> = ({ albums, onAlbumChange }) => {
         <SelectContent>
           {albums.map((album) => (
             <SelectItem key={album.id} value={album.id.toString()}>
-              {album.title}
+              {album.name}
             </SelectItem>
           ))}
         </SelectContent>

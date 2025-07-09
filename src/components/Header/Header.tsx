@@ -23,6 +23,8 @@ type HeaderProps = {
 	onFavorite?: () => void;
 	onDelete?: () => void;
 	onShare?: () => void;
+	onAddToAlbum?: () => void;
+	hideImportButton?: boolean;
 };
 
 const Header: React.FC<HeaderProps> = ({
@@ -33,6 +35,8 @@ const Header: React.FC<HeaderProps> = ({
 	onFavorite,
 	onDelete,
 	onShare,
+	onAddToAlbum,
+	hideImportButton = false,
 }) => {
 	const isMobile = useMobile();
 	const hasSelectedImages = selectedImages.length > 0;
@@ -88,6 +92,7 @@ const Header: React.FC<HeaderProps> = ({
 					onPrivate={handlePrivateClick}
 					onDownload={handleDownloadClick}
 					onDelete={onDelete} // Ajout de la prop onDelete
+					onAddToAlbum={onAddToAlbum}
 				/>
 			) : (
 				<div className="flex items-center justify-between w-full">
@@ -100,14 +105,16 @@ const Header: React.FC<HeaderProps> = ({
 					</div>
 
 					<div className={`flex items-center ${isMobile ? 'gap-2' : 'gap-4'}`}>
+					{!hideImportButton && (
 						<DownloadButton
 							onFileSelected={handleFileSelected}
 							onClick={handleDownloadClick} // Nouvelle prop
 						/>
-						<SearchInput
+					)}
+						{/* <SearchInput
 							placeholder={placeholder}
 							className={isMobile ? 'w-44' : 'w-64'}
-						/>
+						/> */}
 					</div>
 
 					{isMobile && (

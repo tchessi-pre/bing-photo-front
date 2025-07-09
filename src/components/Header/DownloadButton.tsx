@@ -41,35 +41,37 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
 	};
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
-		if (!file) return;
-
+		const files = Array.from(e.target.files || []);
+		if (files.length === 0) return;
+		
 		if (!albumId) {
 			toast.error('Album not available. Please try again.');
 			return;
 		}
-
+		
 		if (isLoading) {
 			toast.error('An upload is already in progress.');
 			return;
 		}
-
-		const loadingToast = toast.loading(`Uploading ${file.name}...`);
+		
 		setIsLoading(true);
-
 		try {
-			await uploadMedia(albumId, file);
-			toast.success('File uploaded successfully!', { id: loadingToast });
-			if (onFileSelected) {
-				await onFileSelected(file);
+			const loadingToast = toast.loading(`Uploading ${files.length} photo(s)...`);
+		
+			for (const file of files) {
+				await uploadMedia(albumId, file);
+				if (onFileSelected) await onFileSelected(file);
 			}
-			window.location.reload();
+		
+			toast.success('Photos uploaded successfully!', { id: loadingToast });
+			window.location.reload(); // à adapter selon ton app
 		} catch (err) {
 			console.error('File upload error:', err);
-			toast.error('Upload failed. Please try again.', { id: loadingToast });
+			toast.error('Upload failed. Please try again.');
 		} finally {
 			setIsLoading(false);
 		}
+		
 	};
 
 	return (
@@ -89,6 +91,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
 				ref={fileInputRef}
 				type='file'
 				accept='image/*'
+				multiple
 				onChange={handleFileChange}
 				className='hidden'
 			/>

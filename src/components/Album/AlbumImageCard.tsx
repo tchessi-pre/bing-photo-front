@@ -8,9 +8,13 @@ import PageHeader from '../customs/PageHeader';
 import AlbumCard from './customs-composents/AlbumCard';
 import { useAlbumStore } from '@/store/albumStore';
 import { useAlbum } from '@/hooks/album/useAlbum';
+import { deleteAlbum } from '@/services/album/albumService';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const AlbumImageCard: React.FC = () => {
   const texts = appTexts.albumPage;
+  const router = useRouter();
 
   const { fetchAlbums, createAlbum, isLoading, error } = useAlbum();
   const albums = useAlbumStore((state) => state.albums);
@@ -36,8 +40,16 @@ const AlbumImageCard: React.FC = () => {
     }
   };
 
-  const handleDeleteAlbum = (albumId: number) => {
-    console.log(`Demande suppression de l'album ${albumId}`);
+  const handleDeleteAlbum = async (albumId: number) => {
+    try {
+      console.log(`Demande suppression de l'album ${albumId}`);
+      await deleteAlbum(albumId);
+      toast.success('Album supprimé avec succès');
+      fetchAlbums();
+    } catch (error) {
+      console.error('Erreur lors de la suppression', error);
+      toast.error("Échec de la suppression de l'album");
+    }
   };
 
   return (
@@ -85,7 +97,7 @@ const AlbumImageCard: React.FC = () => {
                   images={images}
                   onClick={() => handleCardClick(album.id)}
                   onDelete={() => handleDeleteAlbum(album.id)}
-                  title={album.title}
+                  title={album.name}
                 />
               </div>
             );
