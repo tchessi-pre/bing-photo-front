@@ -1,6 +1,11 @@
 import { Photo } from "@/services/album/photoService";
 
 export const groupPhotosByDate = (photos: Photo[]) => {
+  // Vérification que photos existe et est un tableau
+  if (!photos || !Array.isArray(photos)) {
+    return [];
+  }
+
   const grouped: { [key: string]: Photo[] } = {};
 
   photos.forEach((photo) => {

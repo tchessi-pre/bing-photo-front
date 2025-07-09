@@ -64,7 +64,8 @@
 			"archive": "Mon Archive",
 			"private": "Photos Privées",
 			"share": "Partager",
-			"trash": "Corbeille"
+			"trash": "Corbeille",
+			"consents": "Consentements"
 		}
 	},
 	"AlbumDetailPage": {

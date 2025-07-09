@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import ImageGrid from '@/components/Album/ImageGrid';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
+import api from "@/api/apiConfig";
+import { getToken } from "@/services/auth/authService";
 
 import {
   getAlbumById,
@@ -35,6 +37,7 @@ const AlbumDetailPage: React.FC = () => {
   const [scanning, setScanning] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeGroupIndex, setActiveGroupIndex] = useState<number | null>(null);
+  const [consentGranted, setConsentGranted] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +64,27 @@ const AlbumDetailPage: React.FC = () => {
 
     fetchData();
   }, [albumId]);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setConsentGranted(false);
+      return;
+    }
+    api
+      .get("/consents/active", {
+        params: { type: "image_similarity_detection" },
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        if (res.data.consent && res.data.consent.is_granted) {
+          setConsentGranted(true);
+        } else {
+          setConsentGranted(false);
+        }
+      })
+      .catch(() => setConsentGranted(false));
+  }, []);
 
   const handleImageSelect = (index: number) => {
     const updatedSelection = toggleImageSelection(selectedImages, index);
@@ -165,6 +189,7 @@ const AlbumDetailPage: React.FC = () => {
         selectedImageCount={selectedImages.size}
         onAction={() => { }}
         onImport={() => { }}
+        consentGranted={consentGranted}
       />
 
       <div className="mt-4 ml-10 mr-10">
@@ -243,7 +268,7 @@ const AlbumDetailPage: React.FC = () => {
                           >
                             <img
                               src={`http://localhost:9090/${media.path}`}
-                              alt={media.name}
+                              alt={media.path}
                               className="w-full h-40 object-cover"
                             />
                             <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all duration-200 flex items-center justify-center">

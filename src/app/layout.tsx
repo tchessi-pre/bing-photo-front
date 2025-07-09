@@ -30,6 +30,11 @@ export default function RootLayout({
 }) {
 	const pathname = usePathname();
 	const isAlbumsPage = pathname.startsWith('/albums');
+	const isConsentPage = pathname.startsWith('/consent');
+	const isPrivatePage = pathname.startsWith('/private');
+	const isConfidentialityPage = pathname.startsWith('/politique-confidentialite');
+	const isCGUPage = pathname.startsWith('/CGU');
+	const isTermsOfServicePage = pathname.startsWith('/mentions-legales');
 	const isWelcomePage = pathname === '/';
 	const isAuthPage =
 		pathname === '/login' ||
@@ -86,7 +91,7 @@ export default function RootLayout({
 								onFavorite={() => console.log('Ajouter aux favoris')}
 								onDelete={() => console.log('Supprimer')}
 								onShare={() => console.log('Partager')}
-								hideImportButton={isAlbumsPage}
+								hideImportButton={isAlbumsPage || isConsentPage || isPrivatePage || isConfidentialityPage || isCGUPage || isTermsOfServicePage}
 							/>
 							<Sidebar />
 							<main className='flex-1 flex justify-center p-6'>{children}</main>

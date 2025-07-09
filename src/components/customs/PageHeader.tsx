@@ -23,6 +23,7 @@ type PageHeaderProps = {
   selectedImageCount?: number;
   showAddImagesButton?: boolean;
   onAddImages?: () => void;
+  consentGranted?: boolean;
 };
 
 const PageHeader: React.FC<PageHeaderProps> = ({
@@ -36,6 +37,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   selectedImageCount,
   showAddImagesButton = false,
   onAddImages,
+  consentGranted,
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const pathname = usePathname(); // Récupérer l'URL actuelle
@@ -113,8 +115,9 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           </motion.div>
         )}
 
-{isAlbumDetailPage && (
+        {isAlbumDetailPage && (
           <>
+          {consentGranted && (
             <TooltipCustom message="Sélectionner similaires" position="bottom">
               <Button
                 onClick={onSelectSimilarImages}
@@ -123,6 +126,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
                 <KillerFeatureIcon style={{ width: '20px', height: '20px' }} />
               </Button>
             </TooltipCustom>
+          )}
             {imageCount > 0 && (
               <>
                 <Button

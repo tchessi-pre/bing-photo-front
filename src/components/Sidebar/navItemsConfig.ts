@@ -6,6 +6,7 @@ import PrivateHeartIcon from '@/assets/icons/private-heart.svg';
 import ShareIcon from '@/assets/icons/share.svg';
 import DeletePictureIcon from '@/assets/icons/trash-bin-minimalistic-svgrepo-com.svg';
 import appTexts from '@/assets/appTexts.json';
+import CheckIcon from '@/assets/icons/check-circle-svgrepo-com.svg';
 
 const navItems = [
 	{
@@ -13,11 +14,11 @@ const navItems = [
 		icon: OverviewIcon,
 		label: appTexts.sidebar.navigation.overview,
 	},
-	{
-		href: '/favorites',
-		icon: FavoriteIcon,
-		label: appTexts.sidebar.navigation.favorites,
-	},
+	// {
+	// 	href: '/favorites',
+	// 	icon: FavoriteIcon,
+	// 	label: appTexts.sidebar.navigation.favorites,
+	// },
 	{
 		href: '/albums',
 		icon: AlbumsIcon,
@@ -34,10 +35,15 @@ const navItems = [
 		label: appTexts.sidebar.navigation.private,
 	},
 	// { href: '/share', icon: ShareIcon, label: appTexts.sidebar.navigation.share },
+	// {
+	// 	href: '/trash',
+	// 	icon: DeletePictureIcon,
+	// 	label: appTexts.sidebar.navigation.trash,
+	// },
 	{
-		href: '/trash',
-		icon: DeletePictureIcon,
-		label: appTexts.sidebar.navigation.trash,
+		href: '/consents',
+		icon: CheckIcon,
+		label: appTexts.sidebar.navigation.consents,
 	},
 ];
 
