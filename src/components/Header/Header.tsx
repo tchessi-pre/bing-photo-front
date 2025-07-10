@@ -52,52 +52,53 @@ const Header: React.FC<HeaderProps> = ({
 
 	const handlePinSubmit = async (pin: string) => {
 		try {
-		  await setPrivatePin(pin);
-	  
-		  // Une fois le PIN défini, marquer les images comme privées
-		  await Promise.all(
-			selectedImages.map((id) => {
-			  console.log('mediaID à traiter :', id);
-			  return markMediaAsPrivate(id);
-			})
-		  );
-		  
-		  toast.success('Image(s) déplacée(s) dans les photos privées');
-		} catch (err) {
-		  toast.error('Échec de la création du code PIN');
-		} finally {
-		  setIsPinModalOpen(false);
-		  router.push('/private');
-		}
-	  };
-
-	  const handlePrivateClick = async () => {
-		// const pin = localStorage.getItem('privatePin');
+			// Enregistre le code PIN et crée l’album privé si nécessaire
+			await setPrivatePin(pin);
 	
-		// if (pin) {
-			try {
-				let shouldAskForPin = false;
+			// Pause de sécurité pour laisser le temps à l’album d’être créé
+			await new Promise((res) => setTimeout(res, 300));
 	
-				const results = await Promise.all(
-					selectedImages.map(async (id) => {
-						const response = await markMediaAsPrivate(id);
-						if (response?.pin_required) shouldAskForPin = true;
-						return response;
-					})
-				);
-	
-				if (shouldAskForPin) {
-					setIsPinModalOpen(true);
-				} else {
-					toast.success('Image(s) déplacée(s) dans les photos privées');
-				}
-			} catch (err) {
-				console.error(err);
-				toast.error('Erreur lors du déplacement en privé.');
+			// Déplace les images une à une (pour éviter les erreurs)
+			for (const id of selectedImages) {
+				await markMediaAsPrivate(id, false); 
 			}
-		// } else {
-			// setIsPinModalOpen(true); // Ouvre la modale pour créer un PIN
-		// }
+	
+			toast.success('Image(s) déplacée(s) dans les photos privées');
+	
+			// Pause optionnelle avant la redirection
+			await new Promise((res) => setTimeout(res, 500));
+	
+			router.push('/private');
+		} catch (err) {
+			toast.error('Échec du processus de sécurisation des images');
+		} finally {
+			setIsPinModalOpen(false);
+		}
+	};
+
+
+	const handlePrivateClick = async () => {
+		try {
+			// Vérifie si un PIN est requis via une simulation
+			const response = await markMediaAsPrivate(selectedImages[0], true); // simulate = true
+	
+			if (response?.pin_required) {
+				// Affiche la modale de saisie du PIN si nécessaire
+				setIsPinModalOpen(true);
+				return;
+			}
+	
+			// Sinon, effectue directement le déplacement des médias
+			await Promise.all(
+				selectedImages.map((id) => markMediaAsPrivate(id, false))
+			);
+	
+			toast.success('Image(s) déplacée(s) dans les photos privées');
+			router.push('/private'); // Redirection directe
+		} catch (err) {
+			console.error('Erreur lors de la simulation ou du marquage :', err);
+			toast.error('Erreur lors du déplacement en privé.');
+		}
 	};
 	
 

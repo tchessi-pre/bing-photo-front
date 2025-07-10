@@ -1,7 +1,9 @@
 import api from '@/api/apiConfig';
 
-export const markMediaAsPrivate = async (mediaID: number) => {
-  const response = await api.post(`/media/${mediaID}/private`);
+export const markMediaAsPrivate = async (mediaID: number, simulate: boolean) => {
+  const response = await api.post(`/media/${mediaID}/private`, {
+    simulate,
+  });
   return response.data;
 };
 
