@@ -25,6 +25,7 @@ export interface ForgotPasswordResponse {
 
 export interface AuthResponse {
   Token: string;
+  RefreshToken: string;
   user: {
     id: string;
     email: string;
@@ -92,10 +93,13 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
     const response = await api.post('/auth/login', credentials);
     const data = response.data;
     const token = data?.token || data?.Token;
+    const refreshToken = data?.refresh_token || data?.RefreshToken;
     if (!data || !token || typeof token !== 'string') {
       throw new Error('Invalid response format: missing or invalid token');
     }
-
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    }
     setToken(token);
     setAuthToken(token);
     const decoded = jwtDecode<DecodedToken>(token);
@@ -105,7 +109,8 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
         email: decoded.email || '',
         name: decoded.username,
       },
-      token
+      token,
+      refreshToken
     );
 
     return data;
@@ -139,12 +144,13 @@ export const signup = async (credentials: SignUpCredentials): Promise<RegisterRe
 // Fonction pour effectuer la déconnexion
 export const logout = async (): Promise<void> => {
   try {
-    // await api.post('/logout');
-    removeToken();
-    setAuthToken(null);
-    useAuthStore.getState().clearAuth();
+    await api.post('/auth/logout');
   } catch (error) {
-    throw error;
+    console.error(error);
+  } finally {
+    removeToken();
+    localStorage.removeItem('refresh_token');
+    useAuthStore.getState().clearAuth();
   }
 };
 
@@ -200,4 +206,3 @@ export const decodeToken = (): { userID: number } | null => {
     return null;
   }
 };
-

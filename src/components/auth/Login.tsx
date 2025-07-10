@@ -35,7 +35,7 @@ const Login: React.FC = () => {
 		
 		try {
 			const response = await login(formData);
-			await setAuth(response.user, response.token);
+			await setAuth(response.user, response.Token, response.RefreshToken);
 			await new Promise(resolve => setTimeout(resolve, 100));
 			router.push('/overview');
 		} catch (error) {
