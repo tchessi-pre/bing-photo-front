@@ -37,7 +37,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ photos }) => {
   const handleAddToAlbum = () => {
     setIsAddToAlbumModalOpen(true);
     setSelectedAlbumId(null);
-    console.log("coucou");
+    // console.log("coucou");
   };
 
   const isPlaceholder = (src: string) => {

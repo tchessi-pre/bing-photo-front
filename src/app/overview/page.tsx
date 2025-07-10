@@ -28,7 +28,8 @@ const OverviewPage: React.FC = () => {
 		isLoading: albumsLoading,
 		error: albumsError,
 	} = useAlbum();
-	const albums = useAlbumStore((state) => state.albums);
+	var albums = [];
+	albums = useAlbumStore((state) => state.albums);
 	const [mainAlbumId, setMainAlbumId] = useState<number | null>(null);
 
 	const [photos, setPhotos] = useState<
@@ -62,7 +63,6 @@ const OverviewPage: React.FC = () => {
 			setError(null);
 		} catch (error) {
 			setError('Aucune photo pour l\'instant');
-			console.error('Error fetching media:', error);
 			setPhotos([]);
 		} finally {
 			setIsLoading(false);
@@ -104,19 +104,19 @@ const OverviewPage: React.FC = () => {
 		return images[randomIndex];
 	};
 
-	const carouselImages = albums
-  .map((album) => {
-    const coverImage = album?.media?.[0];
-    if (!coverImage || !coverImage.path) return null;
+// 	const carouselImages = albums
+//   .map((album) => {
+//     const coverImage = album?.media?.[0];
+//     if (!coverImage || !coverImage.path) return null;
 
-    return {
-      src: `${process.env.NEXT_PUBLIC_S3}/${coverImage.path}`,
-      alt: `${album.title} - ${coverImage.name || 'Album cover'}`,
-      id: album.id,
-      albumTitle: album.title,
-    };
-  })
-  .filter((img) => img !== null); // ✅ filtre les nulls
+//     return {
+//       src: `${process.env.NEXT_PUBLIC_S3}/${coverImage.path}`,
+//       alt: `${album.title} - ${coverImage.name || 'Album cover'}`,
+//       id: album.id,
+//       albumTitle: album.title,
+//     };
+//   })
+//   .filter((img) => img !== null); // ✅ filtre les nulls
 
 
 	const handleImageClick = (albumId: number) => {

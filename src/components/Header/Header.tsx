@@ -14,6 +14,7 @@ import { useMainAlbum } from '@/hooks/album/useMainAlbum';
 import { mainAlbumService } from '@/services/album/mainAlbumService';
 import { decodeToken, getToken } from '@/services/auth/authService';
 import toast from 'react-hot-toast';
+import { markMediaAsPrivate, setPrivatePin } from '@/services/private/privatePhotoService';
 
 type HeaderProps = {
 	onDownload?: (file?: File) => void; // Modifié pour accepter un fichier optionnel
@@ -43,28 +44,62 @@ const Header: React.FC<HeaderProps> = ({
 	const [isPinModalOpen, setIsPinModalOpen] = useState(false);
 	const router = useRouter();
 
-	// Vérifie si un code PIN existe déjà
-	const hasPin = typeof window !== 'undefined'
-		? localStorage.getItem('privatePin') !== null
-		: false;
+
 
 	const handleClose = () => {
 		onClose?.();
 	};
 
-	const handlePinSubmit = (pin: string) => {
-		console.log('Code PIN créé :', pin);
-		localStorage.setItem('privatePin', pin);
-		router.push('/private');
-	};
-
-	const handlePrivateClick = () => {
-		if (hasPin) {
-			router.push('/private');
-		} else {
-			setIsPinModalOpen(true);
+	const handlePinSubmit = async (pin: string) => {
+		try {
+		  await setPrivatePin(pin);
+	  
+		  // Une fois le PIN défini, marquer les images comme privées
+		  await Promise.all(
+			selectedImages.map((id) => {
+			  console.log('mediaID à traiter :', id);
+			  return markMediaAsPrivate(id);
+			})
+		  );
+		  
+		  toast.success('Image(s) déplacée(s) dans les photos privées');
+		} catch (err) {
+		  toast.error('Échec de la création du code PIN');
+		} finally {
+		  setIsPinModalOpen(false);
+		  router.push('/private');
 		}
+	  };
+
+	  const handlePrivateClick = async () => {
+		// const pin = localStorage.getItem('privatePin');
+	
+		// if (pin) {
+			try {
+				let shouldAskForPin = false;
+	
+				const results = await Promise.all(
+					selectedImages.map(async (id) => {
+						const response = await markMediaAsPrivate(id);
+						if (response?.pin_required) shouldAskForPin = true;
+						return response;
+					})
+				);
+	
+				if (shouldAskForPin) {
+					setIsPinModalOpen(true);
+				} else {
+					toast.success('Image(s) déplacée(s) dans les photos privées');
+				}
+			} catch (err) {
+				console.error(err);
+				toast.error('Erreur lors du déplacement en privé.');
+			}
+		// } else {
+			// setIsPinModalOpen(true); // Ouvre la modale pour créer un PIN
+		// }
 	};
+	
 
 	const handleFileSelected = (file: File) => {
 		onDownload?.(file);

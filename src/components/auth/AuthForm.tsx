@@ -189,7 +189,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, isLoading, error })
 				</button>
 			</form>
 
-			<div className='relative my-2'>
+			{/* <div className='relative my-2'>
 				<div className='absolute inset-0 flex items-center'>
 					<div className='w-full border-t-2 border-green-800/30'></div>
 				</div>
@@ -198,7 +198,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type, onSubmit, isLoading, error })
 				</div>
 			</div>
 
-			<GoogleButton text={texts.googleButton} />
+			<GoogleButton text={texts.googleButton} /> */}
 
 			<p className='mt-4 text-sm text-center text-gray-600'>
 				{type === 'login' ? (

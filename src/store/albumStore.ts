@@ -1,5 +1,5 @@
-import { Album } from '@/types/types';
 import { create } from 'zustand';
+import { Album } from '@/types/types';
 
 interface AlbumStore {
   albums: Album[];
@@ -11,20 +11,21 @@ interface AlbumStore {
 }
 
 export const useAlbumStore = create<AlbumStore>((set, get) => ({
-  albums: [],
+  albums: [], 
 
   setAlbums: (albums: Album[]) => set({ albums }),
 
-  addAlbum: (album: Album) =>
-    set((state) => ({ albums: [...state.albums, album] })),
+  addAlbum: (album: Album) => {
+    const currentAlbums = get().albums || []; 
+    set({ albums: [...currentAlbums, album] });
+  },
 
   removeAlbum: (id: number) =>
     set((state) => ({
       albums: state.albums.filter((a) => a.id !== id),
     })),
 
-  getAlbumById: (id: number) =>
-    get().albums.find((a) => a.id === id),
+  getAlbumById: (id: number) => get().albums.find((a) => a.id === id),
 
   resetAlbums: () => set({ albums: [] }),
 }));

@@ -50,7 +50,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose, selectedImages
             // Générer un lien unique avec l'ID hashé et le nom de l'image
             const hashedId = hashId(image.id);
             const imageName = encodeURIComponent(image.alt || 'image');
-            const imageLink = `${window.location.origin}/image/${hashedId}/${imageName}`;
+            const imageLink = image.src;
 
             return (
               <div key={image.id} className="border p-4 rounded-lg">

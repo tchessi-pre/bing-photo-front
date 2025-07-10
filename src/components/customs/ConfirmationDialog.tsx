@@ -15,7 +15,11 @@ import AlbumSelect from './AlbumSelect';
 type Album = {
 	id: number;
 	title: string;
-};
+	media: Array<{
+	  path: string;
+	  name?: string;
+	}>;
+  }
 
 type ConfirmationDialogProps = {
 	isOpen: boolean;

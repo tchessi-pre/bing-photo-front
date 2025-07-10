@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
 import appTexts from '@/assets/appTexts.json';
 import { EmptyPage } from '../customs';
@@ -8,7 +8,7 @@ import PageHeader from '../customs/PageHeader';
 import AlbumCard from './customs-composents/AlbumCard';
 import { useAlbumStore } from '@/store/albumStore';
 import { useAlbum } from '@/hooks/album/useAlbum';
-import { deleteAlbum } from '@/services/album/albumService';
+import { getAlbums, deleteAlbum } from '@/services/album/albumService';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
@@ -17,14 +17,25 @@ const AlbumImageCard: React.FC = () => {
   const router = useRouter();
 
   const { fetchAlbums, createAlbum, isLoading, error } = useAlbum();
+
   const albums = useAlbumStore((state) => state.albums);
+
+  // const fetchAlbums = useCallback(async () => {
+  //   try {
+  //     const albums = await getAlbums();
+  //     useAlbumStore.getState().setAlbums(albums);
+  //   } catch (error) {
+  //     console.error('Erreur lors du chargement des albums', error);
+  //   }
+  // }, []); // <- vide si pas de dépendances
 
   useEffect(() => {
     fetchAlbums();
-  }, [fetchAlbums]);
+  }, []);
 
   const handleCardClick = (albumId: number) => {
     console.log(`Album ${albumId} cliqué !`);
+    // router.push(`/albums/${albumId}`); // Uncomment if navigation is desired
   };
 
   const handleImport = () => {
@@ -33,10 +44,18 @@ const AlbumImageCard: React.FC = () => {
 
   const handleCreateAlbum = async () => {
     try {
-      await createAlbum('Nouvel Album');
-      console.log(`Album créé avec succès.`);
+      const newAlbum = await createAlbum('Nouvel Album');
+
+      if (!newAlbum || typeof newAlbum !== 'object') {
+        console.error('La réponse de createAlbum est invalide :', newAlbum);
+        alert('Erreur : la création de l\'album a échoué.');
+        return;
+      }
+
+      console.log('Album créé avec succès :', newAlbum);
     } catch (err) {
-      console.error('Erreur création album', err);
+      console.error('Erreur lors de la création de l\'album :', err);
+      alert('Erreur lors de la création de l\'album.');
     }
   };
 
@@ -60,17 +79,13 @@ const AlbumImageCard: React.FC = () => {
         onFileChange={(e) => console.log('Fichiers sélectionnés', e.target.files)}
         onCreateAlbum={handleCreateAlbum}
         onDeleteSelectedImages={() => console.log('Suppression des images sélectionnées')}
-        onSelectSimilarImages={() => console.log('Sélection d’images similaires')}
+        onSelectSimilarImages={() => console.log('Sélection d\'images similaires')}
         onAction={() => console.log('Action réalisée')}
-        albumCount={albums.length}
+        albumCount={albums?.length}
       />
 
       <div className="flex flex-wrap justify-center gap-4 mt-4 md:ml-8 md:mr-8">
-        {isLoading ? (
-          <p>Chargement des albums...</p>
-        ) : error ? (
-          <p className="text-red-500">Erreur : {error}</p>
-        ) : albums.length === 0 ? (
+        {albums?.length === 0 ? (
           <EmptyPage
             title={texts.emptyPageTitle}
             message={texts.emptyPageMessage}
@@ -79,8 +94,7 @@ const AlbumImageCard: React.FC = () => {
             onAction={handleCreateAlbum}
           />
         ) : (
-          albums.map((album, index) => {
-            // Récupère la première image du média (s'il y en a)
+          albums?.map((album: any, index: any) => {
             const coverImage = album.media?.[0];
             const images = coverImage
               ? [{ src: `http://localhost:9090/${coverImage.path}`, alt: coverImage.name }]
@@ -88,8 +102,8 @@ const AlbumImageCard: React.FC = () => {
 
             return (
               <div
-              key={album.id || `album-${index}`}
-              className="opacity-0 translate-y-4 animate-fade-in"
+                key={`album-${album.id}`}
+                className="opacity-0 translate-y-4 animate-fade-in"
                 style={{ animationDelay: `${index * 105}ms` }}
               >
                 <AlbumCard

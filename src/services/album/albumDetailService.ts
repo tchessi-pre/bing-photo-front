@@ -17,12 +17,12 @@ export const getAlbums = async (): Promise<Album[]> => {
     const response = await api.get(`/albums/user`, {
       params: { user_id: user.id },
     });
+    var albums = [];
+    albums = response.data.albums;
 
-    const albums: Album[] = response.data.albums;
-
-    if (!Array.isArray(albums)) {
-      throw new Error('Invalid response format: albums must be an array');
-    }
+    // if (!Array.isArray(albums)) {
+    //   throw new Error('Invalid response format: albums must be an array');
+    // }
 
     // Mets à jour le store global
     useAlbumStore.getState().setAlbums(albums);

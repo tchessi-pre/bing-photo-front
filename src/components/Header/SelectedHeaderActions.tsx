@@ -68,7 +68,7 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
           </div>
 
           {/* Bouton Ajouter aux favoris */}
-          <div
+          {/* <div
             onMouseEnter={() => showTooltip('favorite')}
             onMouseLeave={hideTooltip}
           >
@@ -80,7 +80,7 @@ const SelectedHeaderActions: React.FC<SelectedHeaderActionsProps> = ({
                 <AddToFavoriteIcon className="w-10 h-10" />
               </button>
             </TooltipCustom>
-          </div>
+          </div> */}
 
           {/* Bouton Ajouter */}
           <div

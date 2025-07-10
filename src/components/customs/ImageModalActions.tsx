@@ -85,7 +85,7 @@ const ImageModalActions: React.FC<ImageModalActionsProps> = ({
         </TooltipCustom>
 
         {/* Bouton Ajouter aux favoris */}
-        <TooltipCustom message="Ajouter aux favoris" position="bottom">
+        {/* <TooltipCustom message="Ajouter aux favoris" position="bottom">
           <Button
             onClick={() => onToggleLike(initialIndex)}
             className="w-10 h-10 bg-black/70 hover:bg-orange-500 text-white rounded-full"
@@ -98,7 +98,7 @@ const ImageModalActions: React.FC<ImageModalActionsProps> = ({
               )}
             </motion.div>
           </Button>
-        </TooltipCustom>
+        </TooltipCustom> */}
 
         {/* Bouton Partager */}
         <TooltipCustom message="Partager" position="bottom">

@@ -163,14 +163,12 @@ export const getAlbums = async (): Promise<Album[]> => {
     const response = await api.get(`/albums/user`, {
       params: { user_id: user.id },
     });
-    console.log(response)
-    const albums: Album[] = response.data.albums;
+    var albums = [];
+     albums = response.data.albums;
 
-    if (!Array.isArray(albums)) {
-      throw new Error('Invalid response format: albums must be an array');
-    }
-
-    useAlbumStore.getState().setAlbums(albums); // Tu peux aussi faire addAlbums si tu veux les empiler
+    // if (!Array.isArray(albums)) {
+    //   throw new Error('Invalid response format: albums must be an array');
+    // }
 
     return albums;
   } catch (error) {
@@ -184,7 +182,8 @@ export const getAlbums = async (): Promise<Album[]> => {
  * @returns {Album | undefined} L'album correspondant ou undefined s'il n'existe pas
  */
 export const getAlbumById = (id: number): Album | undefined => {
-  return albums.find((album:Album) => album.id === id);
+  const albums = useAlbumStore.getState().albums;
+  return albums.find((album: Album) => album.id === id);
 };
 
 /**
@@ -213,8 +212,7 @@ export const addAlbum = async (
     if (!album || typeof album !== 'object') {
       throw new Error('Invalid response format');
     }
-
-    useAlbumStore.getState().addAlbum(album); 
+    console.log('albums init:', useAlbumStore.getState().albums)
 
     return album;
   } catch (error) {

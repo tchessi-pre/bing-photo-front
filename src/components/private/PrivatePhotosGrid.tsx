@@ -1,114 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import PageHeader from '../customs/PageHeader';
 import appTexts from '@/assets/appTexts.json';
 import { groupPhotosByDate } from '@/lib/groupPhotosByDate';
 import DateGroup from '../customs/DateGroup';
 import EmptyPage from '../customs/EmptyPage';
 import AlbumAnimateSVG from '@/assets/svg-animate/photo-album-pana.svg';
-import { Photo } from '@/types/types';
-import { privatePhotos } from '@/services/private/privatePhotoService';
+import { getPrivateMedia } from '@/services/private/privatePhotoService';
 import ZoomModal from '../favorites/ZoomModal';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
+import api from '@/api/apiConfig';
+
+type Photo = {
+  id: number;
+  name: string;
+  path: string;
+  date: string;
+};
 
 const PrivatePhotosGrid: React.FC = () => {
   const texts = appTexts.PrivatePage;
-  const params = useParams();
-  const albumId = parseInt(params?.id as string, 10);
 
   const [selectedImages, setSelectedImages] = useState<Set<number>>(new Set());
   const [images, setImages] = useState<Photo[]>([]);
   const [zoomedImageIndex, setZoomedImageIndex] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Charger les photos privées depuis une API ou un service
-    setImages(privatePhotos);
+    const loadPrivatePhotos = async () => {
+      try {
+
+        const { media } = await getPrivateMedia();
+        // console.log('media:', media)
+        const mappedPhotos = media.map((m: any) => ({
+          id: m.id,
+          name: m.name,
+          path: m.path,
+          date: new Date().toISOString().split('T')[0],
+        }));
+
+        setImages(mappedPhotos);
+      } catch (error) {
+        console.error('Erreur lors du chargement des photos privées:', error);
+        toast.error('Erreur lors du chargement des photos privées');
+        setImages([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPrivatePhotos();
   }, []);
 
   const handleImageSelect = (id: number) => {
     const newSelected = new Set(selectedImages);
-    if (newSelected.has(id)) {
-      newSelected.delete(id);
-    } else {
-      newSelected.add(id);
-    }
+    newSelected.has(id) ? newSelected.delete(id) : newSelected.add(id);
     setSelectedImages(newSelected);
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      try {
-        const newImages = await Promise.all(
-          Array.from(files).map(async (file) => {
-            const reader = new FileReader();
-            reader.onload = () => {
-              const newImage = {
-                id: images.length + 1,
-                src: reader.result as string,
-                alt: file.name,
-                date: new Date().toISOString().split('T')[0],
-              };
-              setImages((prevImages) => [...prevImages, newImage]);
-            };
-            reader.readAsDataURL(file);
-          })
-        );
-      } catch (error) {
-        console.error('Erreur lors de l\'importation des images :', error);
-      }
-    }
-  };
-
-  const handleDeleteSelectedImages = async () => {
-    try {
-      // Supprimer les images sélectionnées côté serveur
-      await Promise.all(
-        Array.from(selectedImages).map((id) =>
-          fetch(`/api/private-photos/${id}`, { method: 'DELETE' })
-        )
-      );
-
-      // Mettre à jour l'état local
-      setImages((prevImages) =>
-        prevImages.filter((_, index) => !selectedImages.has(index))
-      );
-      setSelectedImages(new Set());
-    } catch (error) {
-      console.error('Erreur lors de la suppression des images :', error);
-    }
-  };
-
-  const handleSelectSimilarImages = () => {
-    const newSelection = new Set<number>();
-    images.forEach((image, index) => {
-      if (image.alt?.includes('similar')) {
-        newSelection.add(index);
-      }
-    });
-    setSelectedImages(newSelection);
-  };
-
-  const handleImport = () => {
-    console.log('Importer des images');
-  };
-
-  const handleSelectAllByDate = (date: string) => {
-    const photosForDate = images.filter((photo) => photo.date === date);
-    const allSelected = photosForDate.every((photo) => selectedImages.has(photo.id));
-
-    const newSelected = new Set(selectedImages);
-
-    if (allSelected) {
-      photosForDate.forEach((photo) => newSelected.delete(photo.id));
-    } else {
-      photosForDate.forEach((photo) => newSelected.add(photo.id));
-    }
-
-    setSelectedImages(newSelected);
-  };
-
-  const groupedPhotos = groupPhotosByDate(images);
+  const groupedPhotos = groupPhotosByDate(
+    images.map((img) => ({
+      id: img.id,
+      src: `http://localhost:9090/${img.path}`,
+      alt: img.name,
+      date: img.date,
+    }))
+  );
 
   const handleNextImage = () => {
     if (zoomedImageIndex !== null && zoomedImageIndex < images.length - 1) {
@@ -125,17 +82,38 @@ const PrivatePhotosGrid: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (zoomedImageIndex !== null) {
-        if (event.key === 'ArrowRight') {
-          handleNextImage();
-        } else if (event.key === 'ArrowLeft') {
-          handlePreviousImage();
-        }
+        if (event.key === 'ArrowRight') handleNextImage();
+        else if (event.key === 'ArrowLeft') handlePreviousImage();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [zoomedImageIndex]);
+
+  const handleDeleteSelectedImages = async () => {
+    try {
+      const selectedIds = Array.from(selectedImages);
+
+      if (selectedIds.length === 0) {
+        toast.error('Aucune image sélectionnée');
+        return;
+      }
+
+      await Promise.all(
+        selectedIds.map((id) => api.delete(`/media/${id}`))
+      );
+
+      setImages((prevImages) =>
+        prevImages.filter((img) => !selectedIds.includes(img.id))
+      );
+      setSelectedImages(new Set());
+      toast.success(`${selectedIds.length} image(s) supprimée(s)`);
+    } catch (error) {
+      console.error('Erreur lors de la suppression des images:', error);
+      toast.error('Erreur lors de la suppression des images');
+    }
+  };
 
   return (
     <motion.div
@@ -146,17 +124,22 @@ const PrivatePhotosGrid: React.FC = () => {
     >
       <PageHeader
         title={texts.title}
-        onFileChange={handleFileChange}
-        onDeleteSelectedImages={handleDeleteSelectedImages}
-        onSelectSimilarImages={handleSelectSimilarImages}
-        imageCount={images.length}
+        imageCount={images?.length || 0}
         selectedImageCount={selectedImages.size}
-        onImport={handleImport}
-        onCreateAlbum={(albumName: string) => console.log(`Créer l'album : ${albumName}`)}
-        onAction={() => console.log('Action déclenchée')}
+        onDeleteSelectedImages={handleDeleteSelectedImages}
+        onImport={() => {}}
+        onFileChange={() => {}}
+        onCreateAlbum={() => {}}
+        onSelectSimilarImages={() => {}}
+        onAction={() => {}}
       />
+
       <div className="mt-4 ml-10 mr-10">
-        {images.length === 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <p>Chargement des photos privées...</p>
+          </div>
+        ) : images.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -167,7 +150,6 @@ const PrivatePhotosGrid: React.FC = () => {
               message={texts.emptyFavoritesMessage}
               imageSrc={<AlbumAnimateSVG />}
               actionLabel={texts.actionLabel}
-              onFileChange={handleFileChange}
             />
           </motion.div>
         ) : (
@@ -182,7 +164,7 @@ const PrivatePhotosGrid: React.FC = () => {
                 date={group.date}
                 photos={group.photos}
                 selectedImages={selectedImages}
-                onSelectAllByDate={handleSelectAllByDate}
+                onSelectAllByDate={() => {}}
                 onSelect={handleImageSelect}
                 onZoom={setZoomedImageIndex}
               />
@@ -191,16 +173,22 @@ const PrivatePhotosGrid: React.FC = () => {
         )}
       </div>
 
-      {zoomedImageIndex !== null && (
-        <ZoomModal
-          imageSrc={images[zoomedImageIndex].src}
-          images={images}
-          currentIndex={zoomedImageIndex}
-          onClose={() => setZoomedImageIndex(null)}
-          onNext={handleNextImage}
-          onPrevious={handlePreviousImage}
-        />
-      )}
+      {zoomedImageIndex !== null && images[zoomedImageIndex] && (() => {
+        const currentImage = images[zoomedImageIndex];
+        return (
+          <ZoomModal
+            imageSrc={`http://localhost:9090/${currentImage.path}`}
+            images={images.map((img) => ({
+              src: `http://localhost:9090/${img.path}`,
+              alt: img.name,
+            }))}
+            currentIndex={zoomedImageIndex}
+            onClose={() => setZoomedImageIndex(null)}
+            onNext={handleNextImage}
+            onPrevious={handlePreviousImage}
+          />
+        );
+      })()}
     </motion.div>
   );
 };

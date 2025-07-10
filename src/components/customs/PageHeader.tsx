@@ -61,6 +61,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   };
 
   const isAlbumDetailPage = pathname?.startsWith('/albums/');
+  const isPrivatePage = pathname?.startsWith('/private');
 
   return (
     <div className="sticky top-14 z-40 flex flex-col md:flex-row w-full md:w-[90vw] items-start md:items-center justify-between md:p-6 bg-gray-100 shadow-md mx-2 md:ml-10 border border-gray-200 mt-14 space-y-4 md:space-y-0">
@@ -164,7 +165,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
           ac="image/*"       className="hidden"
           onChange={oileChange}
         /> */}
-        {!isAlbumDetailPage && (
+        {!isAlbumDetailPage && !isPrivatePage && (
           
             <AlbumCreateDialog createAlbum={onCreateAlbum} />
 

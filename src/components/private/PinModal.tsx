@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import OTPInput from './OTPInput';
 import appTexts from '@/assets/appTexts.json';
+import { setPrivatePin } from '@/services/private/privatePhotoService';
 
 type PinModalProps = {
   isOpen: boolean;
@@ -17,33 +18,39 @@ const PinModal: React.FC<PinModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const [error, setError] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Vérification que les PINs ont 6 chiffres
+  
     if (pin.length !== 6 || confirmPin.length !== 6) {
       setError(texts.errorMessages.invalidLength);
       return;
     }
-
-    // Vérification que les deux PINs correspondent
+  
     if (pin !== confirmPin) {
       setError(texts.errorMessages.mismatch);
       return;
     }
-
-    // Enregistre le PIN et signale le succès
-    localStorage.setItem('privatePin', pin);
-    onSubmit(pin);
-    setIsConfirmed(true);
-    setError('');
-
-    // Refermer la modale après un délai
-    setTimeout(() => {
-      onClose();
-      setIsConfirmed(false);
-    }, 2000);
+  
+    try {
+      // Envoie le PIN au backend
+      await setPrivatePin(pin);
+  
+      // Enregistre le PIN en local
+      // localStorage.setItem('privatePin', pin);
+      onSubmit(pin);
+      setIsConfirmed(true);
+      setError('');
+  
+      // Refermer la modale après un délai
+      setTimeout(() => {
+        onClose();
+        setIsConfirmed(false);
+      }, 2000);
+    } catch (err) {
+      setError("Erreur lors de l'enregistrement du code PIN.");
+    }
   };
+  
 
   // Réinitialise l’état lorsqu’on ouvre la modale
   useEffect(() => {
